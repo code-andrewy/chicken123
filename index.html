@@ -1,275 +1,419 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Launch Portal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chickenpass</title>
   <style>
-    :root {
-      --primary: #0f0c29;
-      --secondary: #302b63;
-      --tertiary: #24243e;
-      --glow: #00ffe0;
-      --text-muted: #cfcfcf;
-      --btn-hover-glow: rgba(0, 255, 224, 0.3);
+    @import url('https://fonts.googleapis.com/css2?family=Varela+Round:wght@400&display=swap');
+    * { box-sizing: border-box; }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
-      overflow: auto;
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     body {
-      font-family: "Outfit", sans-serif;
+      margin: 0;
+      background-color: black;
+      font-family: 'Varela Round', sans-serif;
+      color: #ADD8E6;
+    }
+    .container {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-      color: #fff;
-      position: relative;
-    }
-
-    body::before {
-      content: "";
-      position: absolute;
-      top: -20%;
-      left: -20%;
-      width: 200%;
-      height: 200%;
-      background: conic-gradient(from 0deg, #00ffe0, #7f00ff, #00ffe0);
-      animation: spin 25s linear infinite;
-      opacity: 0.08;
-      z-index: 0;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .card {
-      position: relative;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 36px;
-      backdrop-filter: blur(30px);
-      padding: 60px 40px;
+      min-height: 100vh;
       text-align: center;
-      max-width: 720px;
-      width: 90%;
-      z-index: 1;
-      box-shadow: 0 0 60px rgba(0, 255, 224, 0.15), 0 0 15px rgba(0, 255, 224, 0.06) inset;
-      transition: all 0.3s ease-in-out;
-      animation: float 6s ease-in-out infinite;
+      animation: fadeIn 1.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+    .text {
+      font-size: 100px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      animation: slideDown 1s ease;
     }
-
-    .card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 80px rgba(0, 255, 224, 0.25), 0 0 20px rgba(0, 255, 224, 0.1) inset;
+    #clock {
+      font-size: 50px;
+      margin-bottom: 20px;
+      color: #00ffff;
+      font-weight: bold;
     }
-
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      color: #fff;
+    #day-of-week {
+      font-size: 40px;
+      margin-bottom: 20px;
+      color: #00ffff;
+      font-weight: bold;
     }
-
-    #rocket {
-      display: inline-block;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-      will-change: transform;
+    #fetched-text {
+      font-size: 24px;
+      margin-top: 20px;
+      max-width: 800px;
+      padding: 10px;
+      background-color: #111;
+      border: 1px solid #00ffff;
+      border-radius: 10px;
     }
-
-    #rocket.launching {
-      animation: blastoff 1.2s forwards;
+    input#url {
+      font-size: 30px;
+      width: 600px;
+      height: 60px;
+      background-color: black;
+      color: #ADD8E6;
+      outline: 4px solid #ADD8E6;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      padding: 10px;
     }
-
-    @keyframes blastoff {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      50% { transform: translateY(-150px) scale(1.2); }
-      100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
+    input#url:hover,
+    input#url:focus {
+      width: 700px;
+      outline-color: #00ffff;
     }
-
-    .typing-text {
-      font-size: 1.25rem;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-      line-height: 1.6;
-      font-weight: 400;
-      min-height: 2.5em;
-      min-width: 300px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .glow-btn {
-      position: relative;
-      border: 2px solid var(--glow);
-      background: rgba(0, 255, 224, 0.05);
-      border-radius: 50px;
-      padding: 16px 48px;
-      color: var(--glow);
-      font-size: 1.2rem;
-      font-weight: 600;
-      cursor: pointer;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(0, 255, 224, 0.3);
-      transform: translateY(0);
-      margin: 14px auto;
-      display: inline-block;
-      min-width: 220px;
-    }
-
-    .glow-btn::before {
-      content: "";
+    #suggestions {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      background-color: #111;
+      border: 1px solid #00ffff;
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 180%;
-      height: 200%;
-      background: linear-gradient(90deg, #00ffe0, #00bfff, #00ffe0);
-      transform: translate(-50%, -50%) rotate(30deg);
-      opacity: 0;
-      transition: opacity 0.4s ease;
+      width: 600px;
+      z-index: 99;
+      color: #ADD8E6;
+      text-align: left;
     }
-
-    .glow-btn:hover::before {
-      opacity: 0.1;
+    #suggestions li {
+      padding: 8px 12px;
+      cursor: pointer;
     }
-
-    .glow-btn:hover {
-      background-color: rgba(0, 255, 224, 0.08);
-      box-shadow: 0 0 30px rgba(0, 255, 224, 0.5);
-      transform: translateY(-3px);
+    #suggestions li:hover {
+      background-color: #222;
     }
-
-    .pulse-ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    button.redirect-button {
+      font-size: 30px;
+      background-color: green;
+      color: white;
+      border: none;
       width: 200px;
-      height: 200px;
+      height: 60px;
+      outline: 4px solid darkgreen;
+      border-radius: 15px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .quick-links {
+      margin: 20px 0;
+    }
+    .quick-links button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 20px;
+      border-radius: 10px;
+      background-color: #222;
+      color: #ADD8E6;
+      border: 2px solid #ADD8E6;
+      cursor: pointer;
+    }
+    .quick-links button:hover {
+      background-color: #444;
+    }
+    .bookmark-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin: 5px;
+    }
+    .bookmark-delete {
+      font-size: 16px;
+      color: red;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .bookmark-delete:hover {
+      color: #ff6666;
+    }
+    .add-bookmark {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .add-bookmark input {
+      font-size: 20px;
+      width: 250px;
+      height: 50px;
+      background-color: black;
+      color: #ADD8E6;
+      outline: 3px solid #ADD8E6;
+      border-radius: 10px;
+      padding: 8px;
+    }
+    .add-bookmark button {
+      font-size: 20px;
+      background-color: #006400;
+      color: white;
+      border: none;
+      width: 150px;
+      height: 50px;
+      outline: 3px solid #004d00;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .add-bookmark-toggle {
+      font-size: 40px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 255, 224, 0.1) 0%, transparent 80%);
-      animation: pulse 2.5s infinite;
-      z-index: -1;
+      background-color: #222;
+      color: #ADD8E6;
+      border: 3px solid #ADD8E6;
+      cursor: pointer;
     }
-
-    @keyframes pulse {
-      0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
-      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.25; }
-      100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
+    #recent-visits h2 {
+      font-size: 30px;
     }
-
-    @media (max-width: 768px) {
-      .card { padding: 40px 30px; }
-      h1 { font-size: 2.2rem; }
-      .typing-text { font-size: 1.1rem; }
-      .glow-btn { font-size: 1rem; padding: 14px 36px; }
+    #recent-visits button {
+      margin: 4px;
+      padding: 8px 15px;
+      font-size: 18px;
+      border-radius: 8px;
+      background-color: #111;
+      color: #ADD8E6;
+      border: 2px solid #00ffff;
+      cursor: pointer;
     }
   </style>
 </head>
-
 <body>
-  <div class="card">
-    <div class="pulse-ring"></div>
-    <h1 title="This site is very cool."><span id="rocket">🚀</span> Launch Portal</h1>
-    <p class="typing-text" id="typedText">Loading fact...</p>
-    <button class="glow-btn" onclick="window.location.href='https://code-andrewy.github.io/jumpman64beta/search.html'">Chickenpass</button>
+  <div class="container">
+    <div class="text">Chickenpass</div>
+    <div id="clock"></div>
+    <div id="day-of-week"></div>
+    <div id="fetched-text">Loading text from GitHub...</div>
+
+    <div id="search-area">
+      <input type="text" id="url" placeholder="Enter URL or Google Search" />
+      <ul id="suggestions"></ul>
+    </div>
+
+    <button class="redirect-button" onclick="redirect()">Launch</button>
+
+    <div class="quick-links" id="quick-links"></div>
+    <button class="add-bookmark-toggle" onclick="toggleBookmarkForm()">+</button>
+
+    <div class="add-bookmark" id="bookmark-form">
+      <input type="text" id="bookmark-name" placeholder="Bookmark Name" />
+      <input type="text" id="bookmark-url" placeholder="Bookmark URL (https://...)" />
+      <button onclick="addBookmark()">Add Bookmark</button>
+    </div>
+
+    <div id="recent-visits">
+      <h2>Recently Visited Sites</h2>
+      <div id="recent-links"></div>
+      <button onclick="clearRecentVisits()" style="margin-top: 10px; background-color: red; border-color: darkred;">Clear History</button>
+    </div>
   </div>
 
   <script>
-    const typedText = document.getElementById("typedText");
-    const typingSpeed = 35;
-    const pauseDuration = 2000;
+    const STORAGE_KEY = 'chickenpass_bookmarks';
+    const RECENT_KEY = 'chickenpass_recent';
+    const MAX_RECENT = 5;
 
-    function typeMessage(message, idx = 0) {
-      if (idx < message.length) {
-        typedText.innerHTML += message.charAt(idx);
-        setTimeout(() => typeMessage(message, idx + 1), typingSpeed);
+    const inputField = document.getElementById('url');
+    const suggestionsList = document.getElementById('suggestions');
+    const quickLinksContainer = document.getElementById('quick-links');
+    const recentLinksContainer = document.getElementById('recent-links');
+
+    function redirect() {
+      const input = inputField.value.trim();
+      if (!input) return;
+      let url;
+      if (/^(https?:\/\/)?([\w\d-]+\.)+[\w]{2,}(\/.*)?$/.test(input)) {
+        url = input.startsWith('http') ? input : 'https://' + input;
       } else {
-        setTimeout(() => eraseMessage(message.length), pauseDuration);
+        url = 'https://www.google.com/search?q=' + encodeURIComponent(input);
       }
+      addRecentVisit(url);
+      window.open(url, '_blank');
     }
 
-    function eraseMessage(length) {
-      if (length > 0) {
-        typedText.innerHTML = typedText.innerHTML.slice(0, -1);
-        setTimeout(() => eraseMessage(length - 1), typingSpeed / 1.5);
-      } else {
-        setTimeout(fetchAndDisplayFact, 500);
-      }
-    }
+    inputField.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') redirect();
+    });
 
-    function fetchAndDisplayFact() {
-      fetch("https://uselessfacts.jsph.pl/api/v2/facts/random?language=en")
-        .then(res => res.json())
-        .then(data => {
-          typedText.innerHTML = "";
-          typeMessage(data.text);
-        })
-        .catch(() => {
-          typedText.innerHTML = "";
-          typeMessage("Oops! Couldn’t load a useless fact right now.");
+    inputField.addEventListener('input', async () => {
+      const query = inputField.value.trim();
+      if (!query) return suggestionsList.innerHTML = '';
+      try {
+        const res = await fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&search=${encodeURIComponent(query)}&limit=5&format=json`);
+        const data = await res.json();
+        suggestionsList.innerHTML = '';
+        data[1].forEach(title => {
+          const li = document.createElement('li');
+          li.textContent = title;
+          li.onclick = () => {
+            inputField.value = title;
+            suggestionsList.innerHTML = '';
+            const googleURL = `https://www.google.com/search?q=${encodeURIComponent(title)}`;
+            addRecentVisit(googleURL);
+            window.open(googleURL, '_blank');
+          };
+          suggestionsList.appendChild(li);
         });
-    }
-
-    // Start the loop initially
-    fetchAndDisplayFact();
-
-    // Rocket blast-off animation
-    document.getElementById("rocket").addEventListener("click", () => {
-      const rocket = document.getElementById("rocket");
-      rocket.classList.add("launching");
-      setTimeout(() => rocket.classList.remove("launching"), 1300);
-    });
-
-    // Easter Egg 1: Glow button click count
-    let clickCount = 0;
-    document.querySelectorAll(".glow-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        clickCount++;
-        if (clickCount === 10) {
-          alert("You really love clicking, huh?");
-        }
-      });
-    });
-
-    // Easter Egg 3: 'A' key = Andrew mode
-    document.addEventListener("keydown", (e) => {
-      if (e.key.toLowerCase() === "a") {
-        alert("A mode!");
-        const beep = new Audio("https://freesound.org/data/previews/66/66717_931655-lq.mp3");
-        beep.play().catch(() => {});
+      } catch (err) {
+        console.error('Suggestion error:', err);
       }
     });
 
-    // Easter Egg 4: Glitchy text every 30s
-    setInterval(() => {
-      const original = typedText.innerHTML;
-      typedText.innerHTML = "SYSTEM MALFUNCTION...just kidding.";
-      setTimeout(() => typedText.innerHTML = original, 1000);
-    }, 30000);
+    function quickLaunch(url) {
+      addRecentVisit(url);
+      window.open(url, '_blank');
+    }
+
+    function createBookmarkButton(name, url, index = null, protectedBookmark = false) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'bookmark-wrapper';
+      const btn = document.createElement('button');
+      btn.textContent = name;
+      btn.onclick = () => quickLaunch(url);
+      wrapper.appendChild(btn);
+      if (!protectedBookmark) {
+        const del = document.createElement('button');
+        del.textContent = '🗑️';
+        del.className = 'bookmark-delete';
+        del.title = 'Delete Bookmark';
+        del.onclick = () => deleteBookmark(index);
+        wrapper.appendChild(del);
+      }
+      quickLinksContainer.appendChild(wrapper);
+    }
+
+    function loadBookmarks() {
+      let bookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (!bookmarks || bookmarks.length === 0) {
+        bookmarks = [
+          { name: "Poki", url: "https://poki.com", protected: true },
+          { name: "Cool Math Games", url: "https://coolmathgames.com", protected: true }
+        ];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
+      }
+      quickLinksContainer.innerHTML = '';
+      bookmarks.forEach((bm, i) => createBookmarkButton(bm.name, bm.url, i, bm.protected));
+    }
+
+    function addBookmark() {
+      const name = document.getElementById('bookmark-name').value.trim();
+      let url = document.getElementById('bookmark-url').value.trim();
+      if (!name || !url) return;
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+      let bookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      bookmarks.push({ name, url });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
+      loadBookmarks();
+      document.getElementById('bookmark-name').value = '';
+      document.getElementById('bookmark-url').value = '';
+    }
+
+    function deleteBookmark(index) {
+      let bookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      if (bookmarks[index]?.protected) return;
+      bookmarks.splice(index, 1);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
+      loadBookmarks();
+    }
+
+    function toggleBookmarkForm() {
+      const form = document.getElementById('bookmark-form');
+      form.style.display = form.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function addRecentVisit(url) {
+      let recent = JSON.parse(localStorage.getItem(RECENT_KEY)) || [];
+      recent = recent.filter(item => item !== url);
+      recent.unshift(url);
+      if (recent.length > MAX_RECENT) recent = recent.slice(0, MAX_RECENT);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(recent));
+      renderRecentVisits();
+    }
+
+    function renderRecentVisits() {
+      let recent = JSON.parse(localStorage.getItem(RECENT_KEY)) || [];
+      recentLinksContainer.innerHTML = '';
+      if (recent.length === 0) {
+        recentLinksContainer.textContent = 'No recent visits yet.';
+        return;
+      }
+      recent.forEach(url => {
+        const btn = document.createElement('button');
+        btn.textContent = url.replace(/^https?:\/\//, '').slice(0, 30);
+        btn.title = url;
+        btn.onclick = () => quickLaunch(url);
+        recentLinksContainer.appendChild(btn);
+      });
+    }
+
+    function clearRecentVisits() {
+      localStorage.removeItem(RECENT_KEY);
+      renderRecentVisits();
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+    }
+
+    function updateDayOfWeek() {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const now = new Date();
+      const dayName = days[now.getDay()];
+      document.getElementById('day-of-week').textContent = ` ${dayName}`;
+    }
+
+    async function fetchAndDisplayText() {
+      try {
+        const res = await fetch('https://raw.githubusercontent.com/code-andrewy/cooltext/refs/heads/main/text');
+        const text = await res.text();
+        const lines = text.split(/\r?\n/).filter(Boolean);
+        document.getElementById('fetched-text').textContent = lines[Math.floor(Math.random() * lines.length)];
+      } catch {
+        document.getElementById('fetched-text').textContent = 'Failed to load content.';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadBookmarks();
+      renderRecentVisits();
+      updateClock();
+      updateDayOfWeek();
+      setInterval(updateClock, 1000);
+      fetchAndDisplayText();
+      setInterval(fetchAndDisplayText, 60000); // refresh text every 60 sec
+    });
   </script>
 </body>
-
 </html>
