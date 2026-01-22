@@ -7,9 +7,12 @@
     <title>Jumpman64 | Web view</title>
     <link rel="icon" href="https://img.icons8.com/emoji/48/chicken-emoji.png" type="image/x-icon">
     <meta name="theme-color" content="#0b1020" />
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
 
+    <!-- Font & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
         :root {
             --bg-overlay: radial-gradient(circle at center, rgba(26, 26, 46, 0.85) 0%, rgba(0, 0, 0, 0.95) 100%);
             --text-main: #e0f7fa;
@@ -101,6 +104,7 @@
             justify-content: center;
             font-size: 18px;
             transition: transform .15s ease, background .15s ease;
+            text-decoration: none;
         }
 
         .icon-btn:hover {
@@ -108,6 +112,11 @@
             background: var(--text-accent);
             color: #000;
             border-color: transparent;
+        }
+
+        /* small readable pill/button style for anchors when there's more content (fallback) */
+        .icon-btn .fa-lg {
+            font-size: 18px;
         }
 
         .page {
@@ -581,6 +590,15 @@
     <div class="top-bar" role="toolbar" aria-label="Top controls">
         <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">◑</button>
         <button class="icon-btn" onclick="openBgSettings()" title="Change Wallpaper" aria-label="Change Wallpaper">🖼</button>
+
+        <!-- New: Bug Report and Requests buttons -->
+        <a class="icon-btn" href="https://forms.gle/fjTkVHhx3MG8RuzYA" target="_blank" rel="noopener noreferrer" title="Bug Report" aria-label="Bug Report">
+            <i class="fas fa-bug fa-lg" aria-hidden="true"></i>
+        </a>
+
+        <a class="icon-btn" href="https://forms.gle/Kme3GCtcecKgu6dV7" target="_blank" rel="noopener noreferrer" title="Requests" aria-label="Requests">
+            <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+        </a>
     </div>
 
     <main class="page" id="page" role="main">
@@ -601,7 +619,13 @@
 
         <div class="pills">
             <div class="info-pill" id="weather">Loading Weather...</div>
+
+            <!-- existing fun fact -->
             <div class="info-pill" id="fun-fact" style="background: rgba(255,165,0,0.06); border-color: rgba(255,165,0,0.18);">Fetching daily fact...</div>
+
+            <!-- new pill: random line from verynice.txt -->
+            <div class="info-pill" id="verynice" style="background: rgba(0,255,255,0.04); border-color: rgba(0,255,255,0.08);">Loading surprise...</div>
+
             <div class="info-pill" id="yourmom" style="background: rgba(255,165,0,0.06); border-color: rgba(255,165,0,0.18);">⚠️ Please note that we don’t track you, but all of your internet traffic goes directly to IT. So please don’t visit non school appropriate sites you know what I mean. Also, some websites (like Twitch) might not work because they are blocked by the Google Admin Console.</div>
         </div>
 
@@ -685,7 +709,9 @@
     </div>
 
     <script>
-        /* Andy — changes: render app name and date/time in pills; timezone forced to America/New_York for display; keyboard/accessibility improvements. */
+        /* changes: render app name and date/time in pills; timezone forced to America/New_York for display; keyboard/accessibility improvements.
+           Added: Bug/Requests icons; fetchRandomLine() to read a random non-empty line from verynice.txt
+        */
 
         const STORAGE_KEY = 'jumpman_bms_v4';
         const HISTORY_KEY = 'jumpman_hist_v4';
@@ -731,6 +757,7 @@
             setInterval(updateTime, 1000);
             fetchWeather();
             fetchFunFact();
+            fetchRandomLine(); // <-- new call
             loadBookmarks();
             renderHistory();
             bindUIShortcuts();
@@ -824,7 +851,6 @@
                     signal: controller.signal,
                     cache: 'no-store'
                 });
-                clearTimeout(id);
                 if (!res.ok) throw new Error('status ' + res.status);
                 return await res.text();
             } finally {
@@ -1013,7 +1039,7 @@
         }
 
         /* Time / weather / fun fact */
-        /* NOTE: explicitly show America/New_York time for Andy as requested */
+        /* NOTE: explicitly show America/New_York time for display */
         function updateTime() {
             const now = new Date();
             const clock = document.getElementById('clock');
@@ -1368,6 +1394,28 @@
                 localStorage.removeItem(HISTORY_KEY);
             } catch {}
             renderHistory();
+        }
+
+        /* Fetch random line from your GitHub raw file */
+        async function fetchRandomLine() {
+            const out = document.getElementById('verynice');
+            const url = 'https://raw.githubusercontent.com/code-andrewy/jumpman64beta/refs/heads/main/verynice.txt';
+            if (!out) return;
+            try {
+                const data = await fetchWithProxyFallback(url, 4000);
+                if (!data) throw new Error('No data');
+                // split lines, trim, ignore empty lines
+                const lines = data.split('\n').map(l => l.replace(/\r$/, '').trim()).filter(l => l.length > 0);
+                if (!lines.length) {
+                    out.textContent = 'No entries found in verynice.txt';
+                    return;
+                }
+                const randomLine = lines[Math.floor(Math.random() * lines.length)];
+                out.textContent = "✨ " + randomLine;
+            } catch (err) {
+                console.warn('fetchRandomLine failed', err);
+                out.textContent = 'Could not fetch surprise';
+            }
         }
 
         /* Expose functions used by inline handlers */
