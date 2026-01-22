@@ -2,989 +2,979 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jumpman64 | Dashboard</title>
-    <link rel="icon" href="https://img.icons8.com/emoji/48/chicken-emoji.png" type="image/x-icon">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jumpman64 | Dashboard</title>
+  <link rel="icon" href="https://img.icons8.com/emoji/48/chicken-emoji.png" type="image/x-icon">
+  <meta name="theme-color" content="#0b1020" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
 
-        :root {
-            --bg-overlay: radial-gradient(circle at center, rgba(26, 26, 46, 0.85) 0%, rgba(0, 0, 0, 0.95) 100%);
-            --text-main: #e0f7fa;
-            --text-accent: #00ffff;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --input-bg: rgba(255, 255, 255, 0.07);
-            --shadow-color: rgba(0, 0, 0, 0.5);
-        }
+    :root {
+      --bg-overlay: radial-gradient(circle at center, rgba(26, 26, 46, 0.85) 0%, rgba(0, 0, 0, 0.95) 100%);
+      --text-main: #e0f7fa;
+      --text-accent: #00ffff;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --input-bg: rgba(255, 255, 255, 0.07);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+      --suggest-bg: rgba(0, 0, 0, 0.8);
+      --max-width: 1100px;
+      --topbar-height: 64px;
+      --glass-border-radius: 14px;
+    }
 
-        [data-theme="light"] {
-            --bg-overlay: radial-gradient(circle at center, rgba(255, 255, 255, 0.8) 0%, rgba(240, 240, 255, 0.9) 100%);
-            --text-main: #1a1a2e;
-            --text-accent: #007bff;
-            --card-bg: rgba(255, 255, 255, 0.4);
-            --card-border: rgba(0, 0, 0, 0.1);
-            --input-bg: rgba(0, 0, 0, 0.05);
-            --shadow-color: rgba(0, 0, 0, 0.1);
-        }
+    [data-theme="light"] {
+      --bg-overlay: radial-gradient(circle at center, rgba(255, 255, 255, 0.8) 0%, rgba(240, 240, 255, 0.9) 100%);
+      --text-main: #1a1a2e;
+      --text-accent: #007bff;
+      --card-bg: rgba(255, 255, 255, 0.4);
+      --card-border: rgba(0, 0, 0, 0.08);
+      --input-bg: rgba(0, 0, 0, 0.05);
+      --shadow-color: rgba(0, 0, 0, 0.08);
+      --suggest-bg: rgba(255, 255, 255, 0.92);
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    /* Reset & layout */
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            font-family: 'Outfit', sans-serif;
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: background 0.3s, color 0.3s;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
-        }
+    html, body {
+      height: 100%;
+    }
 
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-overlay);
-            z-index: -1;
-        }
+    body {
+      margin: 0;
+      position: relative; /* IMPORTANT: allows overlay pseudo-element to position correctly */
+      font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color: var(--text-main);
+      min-height: 100vh;
+      background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      transition: background 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding-top: calc(var(--topbar-height) + 16px);
+    }
 
-        /* Top Bar */
-        .top-bar {
-            width: 100%;
-            max-width: 900px;
-            display: flex;
-            justify-content: flex-end;
-            padding: 20px;
-            gap: 15px;
-        }
+    /* overlay between background and content */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: var(--bg-overlay);
+      z-index: 0;
+    }
 
-        .icon-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-main);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: 0.2s;
-        }
+    /* top bar - fixed */
+    .top-bar {
+      position: fixed;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 95%;
+      max-width: var(--max-width);
+      height: calc(var(--topbar-height) - 8px);
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      z-index: 3;
+      pointer-events: auto;
+      backdrop-filter: blur(6px);
+    }
 
-        .icon-btn:hover {
-            background: var(--text-accent);
-            color: white;
-            border-color: transparent;
-        }
+    .icon-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: transform .15s ease, background .15s ease;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 900px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 20px 60px 20px;
-            text-align: center;
-        }
+    .icon-btn:focus {
+      outline: 3px solid rgba(0,0,0,0.15);
+      outline-offset: 2px;
+    }
 
-        /* Typography */
-        .greeting {
-            font-size: 18px;
-            color: var(--text-accent);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 700;
-            opacity: 0.9;
-        }
+    .icon-btn:hover { transform: translateY(-2px); background: var(--text-accent); color: #000; border-color: transparent; }
 
-        .text {
-            font-size: 60px;
-            font-weight: 700;
-            margin: 5px 0;
-            background: linear-gradient(135deg, var(--text-main), var(--text-accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px var(--shadow-color);
-        }
+    /* page container */
+    .page {
+      position: relative;
+      z-index: 1; /* above the overlay */
+      width: 95%;
+      max-width: var(--max-width);
+      margin: 0 auto 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+      padding: 20px;
+    }
 
-        #clock {
-            font-size: 50px;
-            font-weight: 300;
-            margin-bottom: 5px;
-        }
+    /* Header / greeting */
+    .greeting {
+      font-size: 12px;
+      color: var(--text-accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      opacity: 0.95;
+    }
 
-        #day-of-week {
-            font-size: 18px;
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
+    .brand-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
 
-        /* Info Pills */
-        .info-pill {
-            font-size: 14px;
-            margin-bottom: 10px;
-            padding: 8px 20px;
-            border-radius: 30px;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            max-width: 80%;
-        }
+    .text {
+      font-weight: 800;
+      margin: 0;
+      /* responsive size */
+      font-size: clamp(28px, 7vw, 56px);
+      line-height: 1;
+      background: linear-gradient(135deg, var(--text-main), var(--text-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 10px 30px var(--shadow-color);
+      text-align: center;
+    }
 
-        #fun-fact {
-            font-style: italic;
-            opacity: 0.9;
-            margin-bottom: 30px;
-        }
+    #clock {
+      font-size: clamp(20px, 5vw, 36px);
+      font-weight: 300;
+      margin-bottom: 0;
+      text-align: center;
+    }
 
-        /* --- SEARCH BAR --- */
-        #search-container {
-            width: 100%;
-            max-width: 600px;
-            position: relative;
-            margin-bottom: 30px;
-            z-index: 50;
-        }
+    #day-of-week {
+      font-size: 14px;
+      margin-bottom: 6px;
+      opacity: 0.85;
+    }
 
-        .search-wrapper {
-            display: flex;
-            align-items: center;
-            background: var(--input-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 40px;
-            padding: 5px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
+    /* Info pills */
+    .pills {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      max-width: 760px;
+    }
 
-        .search-wrapper:focus-within {
-            border-color: var(--text-accent);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-        }
+    .info-pill {
+      font-size: 14px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--card-border);
+      max-width: 100%;
+      text-align: center;
+    }
 
-        /* Custom Engine Selector */
-        .engine-dropdown {
-            position: relative;
-            margin-left: 5px;
-        }
+    #fun-fact { font-style: italic; opacity: 0.95; }
 
-        .selected-engine {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.05);
-            transition: 0.2s;
-        }
+    /* search bar */
+    #search-container {
+      width: 100%;
+      max-width: 820px;
+      position: relative;
+      z-index: 2;
+    }
 
-        .selected-engine:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+    .search-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 999px;
+      padding: 6px;
+      transition: box-shadow .2s ease, border-color .2s ease;
+      backdrop-filter: blur(6px);
+    }
 
-        .selected-engine img {
-            width: 20px;
-            height: 20px;
-            border-radius: 3px;
-        }
+    .search-wrapper:focus-within {
+      border-color: var(--text-accent);
+      box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+    }
 
-        .engine-list {
-            display: none;
-            position: absolute;
-            top: 50px;
-            left: 0;
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 5px;
-            width: 140px;
-            box-shadow: 0 5px 15px var(--shadow-color);
-            flex-direction: column;
-            gap: 5px;
-        }
+    /* engine dropdown (left side on small devices) */
+    .engine-dropdown {
+      position: relative;
+      margin-left: 6px;
+    }
 
-        .engine-list.active {
-            display: flex;
-        }
+    .selected-engine {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--card-border);
+    }
 
-        .engine-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            color: var(--text-main);
-            transition: background 0.2s;
-        }
+    .selected-engine img { width: 20px; height: 20px; border-radius: 3px; display:block; }
 
-        .engine-option:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-accent);
-        }
+    .engine-list {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 8px;
+      width: 160px;
+      box-shadow: 0 6px 22px var(--shadow-color);
+      flex-direction: column;
+      gap: 6px;
+    }
 
-        .engine-option img {
-            width: 16px;
-            height: 16px;
-        }
+    .engine-list.active { display: flex; }
 
-        /* Input */
-        input#url {
-            flex: 1;
-            font-size: 18px;
-            height: 50px;
-            background: transparent;
-            color: var(--text-main);
-            border: none;
-            padding: 0 15px;
-            outline: none;
-        }
+    .engine-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-main);
+      transition: background .12s ease;
+    }
 
-        .redirect-button {
-            background: var(--text-accent);
-            color: #000;
-            border: none;
-            padding: 0 25px;
-            height: 40px;
-            border-radius: 20px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+    .engine-option:hover { background: rgba(255,255,255,0.04); color: var(--text-accent); }
 
-        .redirect-button:hover {
-            transform: scale(1.05);
-        }
+    .engine-option img { width: 18px; height: 18px; }
 
-        /* Suggestions */
-        #suggestions {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0 0 0;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid var(--card-border);
-            border-radius: 15px;
-            position: absolute;
-            width: 100%;
-            overflow: hidden;
-            display: none;
-            text-align: left;
-        }
+    /* Input */
+    input#url {
+      flex: 1;
+      font-size: 16px;
+      height: 44px;
+      background: transparent;
+      color: var(--text-main);
+      border: none;
+      padding: 0 14px;
+      outline: none;
+      min-width: 0;
+    }
 
-        #suggestions.active {
-            display: block;
-        }
+    .redirect-button {
+      background: var(--text-accent);
+      color: #000;
+      border: none;
+      padding: 10px 18px;
+      height: 44px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .12s ease;
+      white-space: nowrap;
+    }
 
-        #suggestions li {
-            padding: 12px 20px;
-            cursor: pointer;
-            border-bottom: 1px solid #333;
-            color: #fff;
-        }
+    .redirect-button:active { transform: translateY(1px); }
+    .redirect-button:hover { transform: scale(1.03); }
 
-        #suggestions li:hover {
-            background: #222;
-            color: var(--text-accent);
-        }
+    /* suggestions */
+    #suggestions {
+      list-style: none;
+      padding: 6px;
+      margin: 8px 0 0 0;
+      background: var(--suggest-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      position: absolute;
+      width: 100%;
+      overflow: hidden;
+      display: none;
+      text-align: left;
+      max-height: 260px;
+      overflow-y: auto;
+    }
 
-        /* Cards */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 25px;
-            width: 100%;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px var(--shadow-color);
-            text-align: left;
-        }
+    #suggestions.active { display: block; }
 
-        .section-title {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: var(--text-accent);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    #suggestions li {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      color: var(--text-main);
+      font-size: 14px;
+    }
 
-        /* Bookmark Styling */
-        .quick-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+    #suggestions li:last-child { border-bottom: none; }
+    #suggestions li:hover, #suggestions li:focus { background: rgba(255,255,255,0.03); color: var(--text-accent); outline: none; }
 
-        .bookmark-wrapper {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 8px 15px;
-            border-radius: 12px;
-            transition: 0.2s;
-            border: 1px solid transparent;
-        }
+    /* cards */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--glass-border-radius);
+      padding: 18px;
+      width: 100%;
+      margin-bottom: 8px;
+      box-shadow: 0 8px 28px var(--shadow-color);
+      text-align: left;
+    }
 
-        .bookmark-wrapper:hover {
-            border-color: var(--text-accent);
-            background: rgba(255, 255, 255, 0.15);
-        }
+    .section-title {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: var(--text-accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .bookmark-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: none;
-            border: none;
-            color: var(--text-main);
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 14px;
-        }
+    /* bookmarks */
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
 
-        .nav-icon {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
-        }
+    .bookmark-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.04);
+      padding: 8px 12px;
+      border-radius: 12px;
+      transition: transform .12s ease, border-color .12s ease;
+      border: 1px solid transparent;
+    }
 
-        /* History Styling */
-        .history-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-        }
+    .bookmark-wrapper:hover { transform: translateY(-3px); border-color: var(--text-accent); background: rgba(255,255,255,0.06); }
 
-        .history-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-main);
-            opacity: 0.7;
-            text-decoration: none;
-            font-size: 13px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            white-space: nowrap;
-        }
+    .bookmark-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 14px; padding:0; }
 
-        .history-item:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
-        }
+    .nav-icon { width: 18px; height: 18px; border-radius: 3px; flex-shrink:0; }
 
-        /* Forms & Modals */
-        #bookmark-form {
-            display: none;
-            gap: 10px;
-            margin-top: 15px;
-        }
+    /* history */
+    .history-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+    }
 
-        #bookmark-form input {
-            background: var(--input-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-main);
-            padding: 10px;
-            border-radius: 8px;
-            flex: 1;
-            outline: none;
-        }
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+      opacity: 0.85;
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 8px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
 
-        #bg-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
+    .history-item:hover { opacity: 1; background: rgba(255,255,255,0.04); }
 
-        .modal-content {
-            background: #222;
-            padding: 30px;
-            border-radius: 20px;
-            width: 400px;
-            text-align: center;
-            border: 1px solid var(--text-accent);
-        }
+    /* bookmark form & modal */
+    #bookmark-form { display: none; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+    #bookmark-form input { background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; outline: none; }
 
-        .modal-content input {
-            width: 100%;
-            padding: 10px;
-            margin: 15px 0;
-            background: #111;
-            border: 1px solid #444;
-            color: white;
-            border-radius: 5px;
-        }
-    </style>
+    #bg-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 22px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      border: 1px solid var(--text-accent);
+      color: var(--text-main);
+    }
+
+    .modal-content input { width: 100%; padding: 10px; margin: 12px 0; background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 8px; }
+
+    /* small screens adjustments */
+    @media (max-width: 640px) {
+      .top-bar { height: calc(var(--topbar-height)); gap: 8px; top: 6px; }
+      body { padding-top: calc(var(--topbar-height) + 12px); }
+      .greeting { font-size: 11px; }
+      .engine-list { left: auto; right: 0; width: 160px; }
+      .search-wrapper { gap: 6px; padding: 6px; }
+      .selected-engine { width: 40px; height: 40px; }
+      .redirect-button { padding: 10px 14px; font-size: 14px; }
+      .info-pill { font-size: 13px; padding: 8px 12px; }
+      .card { padding: 14px; }
+    }
+
+    /* Accessibility / reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
 </head>
 
 <body>
 
-    <div id="bg-modal">
-        <div class="modal-content">
-            <h3 style="color:white; margin:0">Set Wallpaper</h3>
-            <input type="text" id="bg-url-input" placeholder="https://..." />
-            <button class="redirect-button" onclick="saveBackground()">Save</button>
-            <button style="background:none; border:none; color:#aaa; cursor:pointer; margin-top:10px" onclick="document.getElementById('bg-modal').style.display='none'">Cancel</button>
-            <button style="background:none; border:none; color:#ff4444; cursor:pointer; margin-top:10px; display:block; width:100%" onclick="resetBackground()">Reset Default</button>
-        </div>
+  <div class="top-bar" role="toolbar" aria-label="Top controls">
+    <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">◑</button>
+    <button class="icon-btn" onclick="openBgSettings()" title="Change Wallpaper" aria-label="Change Wallpaper">🖼</button>
+  </div>
+
+  <main class="page" id="page" role="main">
+    <div class="brand-row" aria-hidden="false">
+      <div class="greeting" id="greeting">WELCOME</div>
+      <h1 class="text">Jumpman64</h1>
+      <div id="clock">00:00:00</div>
+      <div id="day-of-week">...</div>
     </div>
 
-    <div class="top-bar">
-        <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">◑</button>
-        <button class="icon-btn" onclick="openBgSettings()" title="Change Wallpaper">🖼</button>
+    <div class="pills">
+      <div class="info-pill" id="weather">Loading Weather...</div>
+      <div class="info-pill" id="fun-fact" style="background: rgba(255,165,0,0.06); border-color: rgba(255,165,0,0.18);">Fetching daily fact...</div>
+      <div class="info-pill" id="yourmom" style="background: rgba(255,165,0,0.06); border-color: rgba(255,165,0,0.18);">⚠️ Please note that we don’t track you, but all of your internet traffic goes directly to IT. So please don’t visit non school appropriate sites you know what I mean. Also, some websites (like Twitch) might not work because they are blocked by the Google Admin Console.</div>
     </div>
 
-    <div class="container">
-        <div class="greeting" id="greeting">WELCOME</div>
-        <div class="text">Jumpman64</div>
-        <div id="clock">00:00:00</div>
-        <div id="day-of-week">...</div>
+    <div id="search-container" aria-label="Search">
+      <div class="search-wrapper" role="search">
+        <div class="engine-dropdown" id="engine-wrapper">
+          <div class="selected-engine" id="selected-engine" onclick="toggleEngineMenu()" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Choose search engine">
+            <img id="current-engine-icon" src="https://www.google.com/favicon.ico" alt="Engine">
+          </div>
 
-        <div class="info-pill" id="weather">Loading Weather...</div>
-        <div class="info-pill" id="fun-fact" style="background:rgba(255, 165, 0, 0.1); border-color: rgba(255, 165, 0, 0.3);">Fetching daily fact...</div>
-
-        <div id="search-container">
-            <div class="search-wrapper">
-                <div class="engine-dropdown" id="engine-wrapper">
-                    <div class="selected-engine" onclick="toggleEngineMenu()">
-                        <img id="current-engine-icon" src="https://www.google.com/favicon.ico" alt="Engine">
-                    </div>
-                    <div class="engine-list" id="engine-menu">
-                        <div class="engine-option" onclick="setEngine('google', 'https://www.google.com/favicon.ico')">
-                            <img src="https://www.google.com/favicon.ico"> Google
-                        </div>
-                        <div class="engine-option" onclick="setEngine('duckduckgo', 'https://duckduckgo.com/favicon.ico')">
-                            <img src="https://duckduckgo.com/favicon.ico"> DuckGo
-                        </div>
-                        <div class="engine-option" onclick="setEngine('bing', 'https://www.bing.com/favicon.ico')">
-                            <img src="https://www.bing.com/favicon.ico"> Bing
-                        </div>
-                    </div>
-                </div>
-
-                <input type="text" id="url" placeholder="Search web or type URL..." autocomplete="off" />
-                <button class="redirect-button" onclick="redirect()">Go</button>
+          <div class="engine-list" id="engine-menu" role="menu" aria-hidden="true">
+            <div class="engine-option" role="menuitem" tabindex="0" onclick="setEngine('google','https://www.google.com/favicon.ico')">
+              <img src="https://www.google.com/favicon.ico" alt=""> Google
             </div>
-            <ul id="suggestions"></ul>
+            <div class="engine-option" role="menuitem" tabindex="0" onclick="setEngine('duckduckgo','https://duckduckgo.com/favicon.ico')">
+              <img src="https://duckduckgo.com/favicon.ico" alt=""> DuckDuckGo
+            </div>
+            <div class="engine-option" role="menuitem" tabindex="0" onclick="setEngine('bing','https://www.bing.com/favicon.ico')">
+              <img src="https://www.bing.com/favicon.ico" alt=""> Bing
+            </div>
+          </div>
         </div>
 
-        <div class="card">
-            <div class="section-title">
-                <span>Bookmarks</span>
-                <button onclick="toggleBookmarkForm()" style="background:none; border:1px solid var(--text-accent); color:var(--text-accent); border-radius:50%; width:28px; height:28px; cursor:pointer;">+</button>
-            </div>
-            <div class="quick-links" id="quick-links"></div>
-            <div id="bookmark-form">
-                <input type="text" id="bm-name" placeholder="Name" />
-                <input type="text" id="bm-url" placeholder="URL" />
-                <button onclick="addBookmark()" style="background:var(--text-accent); border:none; padding:0 20px; border-radius:8px; cursor:pointer; font-weight:bold;">Add</button>
-            </div>
-        </div>
+        <input type="text" id="url" placeholder="Search web or type URL..." autocomplete="off" aria-label="Search or URL" />
+        <button class="redirect-button" onclick="redirect()" aria-label="Go">Go</button>
+      </div>
 
-        <div class="card">
-            <div class="section-title">
-                <span>History</span>
-                <button onclick="clearHistory()" style="background:none; border:none; color:#ff4444; cursor:pointer; font-size:12px;">Clear All</button>
-            </div>
-            <div id="recent-links" class="history-list"></div>
-        </div>
+      <ul id="suggestions" aria-label="Suggestions" role="listbox"></ul>
     </div>
 
-    <script>
-        /* Full fixed script — safe guards, defaults persisted, no scope leaks */
-        const STORAGE_KEY = 'jumpman_bms_v4';
-        const HISTORY_KEY = 'jumpman_hist_v4';
-        const PREF_KEY = 'jumpman_pref_v4';
-        const ALTON_COORD = {
-            lat: 43.4523,
-            lon: -71.2176
-        };
+    <section class="card" aria-labelledby="bookmarks-title">
+      <div class="section-title">
+        <span id="bookmarks-title">Bookmarks</span>
+        <button onclick="toggleBookmarkForm()" aria-expanded="false" style="background:none; border:1px solid var(--text-accent); color:var(--text-accent); border-radius:50%; width:28px; height:28px; cursor:pointer;">+</button>
+      </div>
 
-        // Default Engine State
-        let currentEngine = 'google';
+      <div class="quick-links" id="quick-links" aria-live="polite"></div>
 
-        window.addEventListener('DOMContentLoaded', () => {
-            loadPreferences();
-            updateTime();
-            setInterval(updateTime, 1000);
-            fetchWeather();
-            fetchFunFact();
-            loadBookmarks();
-            renderHistory();
+      <div id="bookmark-form">
+        <input type="text" id="bm-name" placeholder="Name" aria-label="Bookmark name" />
+        <input type="text" id="bm-url" placeholder="URL" aria-label="Bookmark URL" />
+        <button onclick="addBookmark()" style="background:var(--text-accent); border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:bold;">Add</button>
+      </div>
+    </section>
 
-            // Close dropdowns if clicking outside (safe checks)
-            document.addEventListener('click', (e) => {
-                const engineWrapper = document.getElementById('engine-wrapper');
-                const engineMenu = document.getElementById('engine-menu');
-                const searchContainer = document.getElementById('search-container');
-                const suggestions = document.getElementById('suggestions');
+    <section class="card" aria-labelledby="history-title">
+      <div class="section-title">
+        <span id="history-title">History</span>
+        <button onclick="clearHistory()" style="background:none; border:none; color:#ff6b6b; cursor:pointer; font-size:13px;">Clear All</button>
+      </div>
 
-                if (engineWrapper && engineMenu && !engineWrapper.contains(e.target)) {
-                    engineMenu.classList.remove('active');
-                }
-                if (searchContainer && suggestions && !searchContainer.contains(e.target)) {
-                    suggestions.classList.remove('active');
-                }
-            });
+      <div id="recent-links" class="history-list" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <!-- wallpaper modal -->
+  <div id="bg-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content" role="document">
+      <h3 style="margin:0 0 8px 0">Set Wallpaper</h3>
+      <input type="text" id="bg-url-input" placeholder="https://example.com/image.jpg" aria-label="Wallpaper URL" />
+      <div style="display:flex; gap:8px; justify-content:center;">
+        <button class="redirect-button" onclick="saveBackground()">Save</button>
+        <button class="icon-btn" onclick="closeBgSettings()" style="background:none; border:1px solid var(--card-border); color:var(--text-main);">Cancel</button>
+      </div>
+      <button style="background:none; border:none; color:#ff6b6b; cursor:pointer; margin-top:12px; display:block; width:100%" onclick="resetBackground()">Reset to Default</button>
+    </div>
+  </div>
+
+  <script>
+    /* =======================
+       App constants & keys
+       ======================= */
+    const STORAGE_KEY = 'jumpman_bms_v4';
+    const HISTORY_KEY = 'jumpman_hist_v4';
+    const PREF_KEY = 'jumpman_pref_v4';
+    const ALTON_COORD = { lat: 43.4523, lon: -71.2176 }; // kept
+
+    let currentEngine = 'google';
+
+    /* ----------------- Helpers ----------------- */
+    function safeJSONParse(s, fallback) {
+      try { const v = JSON.parse(s); return v === null ? fallback : v; } catch { return fallback; }
+    }
+
+    /* ----------------- Init ----------------- */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPreferences();
+      updateTime();
+      setInterval(updateTime, 1000);
+      fetchWeather();
+      fetchFunFact();
+      loadBookmarks();
+      renderHistory();
+      bindUIShortcuts();
+      enhanceAccessibility();
+    });
+
+    /* ----------------- Engine UI ----------------- */
+    function toggleEngineMenu() {
+      const menu = document.getElementById('engine-menu');
+      const sel = document.getElementById('selected-engine');
+      if (!menu || !sel) return;
+      const active = menu.classList.toggle('active');
+      menu.setAttribute('aria-hidden', (!active).toString());
+      sel.setAttribute('aria-expanded', active.toString());
+      if (active) {
+        // focus first option
+        const opt = menu.querySelector('.engine-option');
+        if (opt) opt.focus();
+      }
+    }
+
+    function setEngine(name, iconUrl) {
+      currentEngine = name || 'google';
+      const icon = document.getElementById('current-engine-icon');
+      if (icon && iconUrl) icon.src = iconUrl;
+      const menu = document.getElementById('engine-menu');
+      if (menu) { menu.classList.remove('active'); menu.setAttribute('aria-hidden', 'true'); }
+      const sel = document.getElementById('selected-engine');
+      if (sel) sel.setAttribute('aria-expanded', 'false');
+      const input = document.getElementById('url');
+      if (input) input.focus();
+      savePref('engine', currentEngine);
+    }
+
+    /* keyboard / click helpers */
+    function bindUIShortcuts() {
+      // close menus when clicking outside
+      document.addEventListener('click', (e) => {
+        const engineWrapper = document.getElementById('engine-wrapper');
+        const engineMenu = document.getElementById('engine-menu');
+        const searchContainer = document.getElementById('search-container');
+        const suggestions = document.getElementById('suggestions');
+
+        if (engineWrapper && engineMenu && !engineWrapper.contains(e.target)) {
+          engineMenu.classList.remove('active');
+          engineMenu.setAttribute('aria-hidden', 'true');
+          document.getElementById('selected-engine')?.setAttribute('aria-expanded', 'false');
+        }
+        if (searchContainer && suggestions && !searchContainer.contains(e.target)) {
+          suggestions.classList.remove('active');
+        }
+      });
+
+      // keyboard support (escape to close)
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          document.getElementById('engine-menu')?.classList.remove('active');
+          document.getElementById('suggestions')?.classList.remove('active');
+          closeBgSettings();
+        }
+      });
+    }
+
+    function enhanceAccessibility() {
+      // allow engine options to be chosen with Enter/Space when focused
+      document.querySelectorAll('.engine-option').forEach(el => {
+        el.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter' || ev.key === ' ') {
+            ev.preventDefault();
+            el.click();
+          }
         });
+      });
+    }
 
-        /* ---------------- ENGINE LOGIC ---------------- */
-        function toggleEngineMenu() {
-            const menu = document.getElementById('engine-menu');
-            if (menu) menu.classList.toggle('active');
+    /* ----------------- Redirect / Search ----------------- */
+    function redirect() {
+      const inputEl = document.getElementById('url');
+      if (!inputEl) return;
+      const input = inputEl.value.trim();
+      if (!input) return;
+
+      let target;
+      // simple domain regex (accepts subdomains) otherwise search
+      const domainLike = /^(https?:\/\/)?([\w-]+\.)+[\w]{2,}(\/.*)?$/i;
+      if (domainLike.test(input)) {
+        target = input.startsWith('http') ? input : 'https://' + input;
+      } else {
+        const engines = {
+          google: 'https://www.google.com/search?q=',
+          duckduckgo: 'https://duckduckgo.com/?q=',
+          bing: 'https://www.bing.com/search?q='
+        };
+        target = (engines[currentEngine] || engines.google) + encodeURIComponent(input);
+      }
+
+      saveHistory(target);
+      // navigate (use assign so back works)
+      window.location.assign(target);
+    }
+
+    /* ----------------- Suggestions (Wikipedia OpenSearch) ----------------- */
+    (function bindSearchSuggestions() {
+      const searchInput = document.getElementById('url');
+      const suggestions = document.getElementById('suggestions');
+      if (!searchInput || !suggestions) return;
+
+      let controller = null;
+      searchInput.addEventListener('input', async (e) => {
+        const q = e.target.value.trim();
+        if (!q) {
+          suggestions.classList.remove('active');
+          suggestions.innerHTML = '';
+          return;
         }
 
-        function setEngine(name, iconUrl) {
-            currentEngine = name;
-            const icon = document.getElementById('current-engine-icon');
-            if (icon && iconUrl) icon.src = iconUrl;
-            const menu = document.getElementById('engine-menu');
-            if (menu) menu.classList.remove('active');
-            const input = document.getElementById('url');
-            if (input) input.focus();
-        }
+        // cancel previous request (if supported)
+        if (controller) controller.abort();
+        controller = new AbortController();
 
-        function redirect() {
-            const inputEl = document.getElementById('url');
-            if (!inputEl) return;
-            const input = inputEl.value.trim();
-            if (!input) return;
+        try {
+          const res = await fetch(
+            `https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&search=${encodeURIComponent(q)}&limit=6&format=json`,
+            { signal: controller.signal }
+          );
+          const data = await res.json();
+          suggestions.innerHTML = '';
 
-            let target;
-            // domain-like input -> open that site; otherwise use currentEngine to search
-            if (/^(https?:\/\/)?([\w-]+\.)+[\w]{2,}(\/.*)?$/.test(input)) {
-                target = input.startsWith('http') ? input : 'https://' + input;
-            } else {
-                const engines = {
-                    google: 'https://www.google.com/search?q=',
-                    duckduckgo: 'https://duckduckgo.com/?q=',
-                    bing: 'https://www.bing.com/search?q='
-                };
-                target = (engines[currentEngine] || engines.google) + encodeURIComponent(input);
-            }
-
-            saveHistory(target);
-            // use location.assign so back-button behavior is normal
-            window.location.assign(target);
-        }
-
-        /* ---------------- SEARCH SUGGESTIONS ---------------- */
-        (function bindSearchSuggestions() {
-            const searchInput = document.getElementById('url');
-            const suggestions = document.getElementById('suggestions');
-            if (!searchInput || !suggestions) return;
-
-            searchInput.addEventListener('input', async (e) => {
-                const q = e.target.value.trim();
-                if (!q) {
-                    suggestions.classList.remove('active');
-                    suggestions.innerHTML = '';
-                    return;
-                }
-
-                try {
-                    const res = await fetch(
-                        `https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&search=${encodeURIComponent(q)}&limit=5&format=json`
-                    );
-                    const data = await res.json();
-                    suggestions.innerHTML = '';
-
-                    if (Array.isArray(data) && data[1] && data[1].length > 0) {
-                        suggestions.classList.add('active');
-                        data[1].forEach(title => {
-                            const li = document.createElement('li');
-                            li.textContent = title;
-                            li.tabIndex = 0;
-                            li.onclick = () => {
-                                searchInput.value = title;
-                                redirect();
-                            };
-                            li.onkeydown = (ev) => {
-                                if (ev.key === 'Enter') {
-                                    searchInput.value = title;
-                                    redirect();
-                                }
-                            };
-                            suggestions.appendChild(li);
-                        });
-                    } else {
-                        suggestions.classList.remove('active');
-                    }
-                } catch (err) {
-                    // quietly fail but clear suggestions
-                    console.warn('Suggestion fetch failed', err);
-                    suggestions.classList.remove('active');
-                    suggestions.innerHTML = '';
-                }
+          if (Array.isArray(data) && data[1] && data[1].length) {
+            suggestions.classList.add('active');
+            data[1].forEach(title => {
+              const li = document.createElement('li');
+              li.textContent = title;
+              li.tabIndex = 0;
+              li.setAttribute('role', 'option');
+              li.onclick = () => { searchInput.value = title; redirect(); };
+              li.onkeydown = (ev) => { if (ev.key === 'Enter') { searchInput.value = title; redirect(); } };
+              suggestions.appendChild(li);
             });
-
-            // Enter key triggers redirect
-            searchInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') redirect();
-            });
-        })();
-
-        /* ---------------- PREFERENCES ---------------- */
-        function loadPreferences() {
-            const prefs = JSON.parse(localStorage.getItem(PREF_KEY)) || {
-                theme: 'dark',
-                bg: null
-            };
-            document.body.setAttribute('data-theme', prefs.theme || 'dark');
-            if (prefs.bg) document.body.style.backgroundImage = `url('${prefs.bg}')`;
+          } else {
+            suggestions.classList.remove('active');
+          }
+        } catch (err) {
+          // silent fail
+          suggestions.classList.remove('active');
+          suggestions.innerHTML = '';
+          // console.warn('Suggestion fetch failed', err);
+        } finally {
+          controller = null;
         }
+      });
 
-        function toggleTheme() {
-            const current = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', current);
-            savePref('theme', current);
-        }
+      // Enter triggers search
+      searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') redirect(); });
+    })();
 
-        function savePref(key, val) {
-            const prefs = JSON.parse(localStorage.getItem(PREF_KEY)) || {};
-            prefs[key] = val;
-            localStorage.setItem(PREF_KEY, JSON.stringify(prefs));
-        }
+    /* ----------------- Preferences (theme/background) ----------------- */
+    function loadPreferences() {
+      const prefs = safeJSONParse(localStorage.getItem(PREF_KEY), { theme: 'dark', bg: null, engine: 'google' });
+      document.body.setAttribute('data-theme', prefs.theme || 'dark');
+      if (prefs.bg) document.body.style.backgroundImage = `url('${prefs.bg}')`;
+      if (prefs.engine) {
+        currentEngine = prefs.engine;
+        const iconMap = { google: 'https://www.google.com/favicon.ico', duckduckgo: 'https://duckduckgo.com/favicon.ico', bing: 'https://www.bing.com/favicon.ico' };
+        const icon = document.getElementById('current-engine-icon');
+        if (icon) icon.src = iconMap[prefs.engine] || iconMap.google;
+      }
+    }
 
-        /* Background modal helpers */
-        function openBgSettings() {
-            const modal = document.getElementById('bg-modal');
-            if (modal) modal.style.display = 'flex';
-        }
+    function toggleTheme() {
+      const current = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      document.body.setAttribute('data-theme', current);
+      savePref('theme', current);
+    }
 
-        function saveBackground() {
-            const input = document.getElementById('bg-url-input');
-            const modal = document.getElementById('bg-modal');
-            if (!input) return;
-            const url = input.value.trim();
-            if (url) {
-                document.body.style.backgroundImage = `url('${url}')`;
-                savePref('bg', url);
-                if (modal) modal.style.display = 'none';
-            }
-        }
+    function savePref(key, val) {
+      const prefs = safeJSONParse(localStorage.getItem(PREF_KEY), {});
+      prefs[key] = val;
+      try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch { /* ignore */ }
+    }
 
-        function resetBackground() {
-            const modal = document.getElementById('bg-modal');
-            document.body.style.backgroundImage = '';
-            savePref('bg', null);
-            if (modal) modal.style.display = 'none';
-        }
+    function openBgSettings() {
+      const modal = document.getElementById('bg-modal');
+      if (!modal) return;
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+      document.getElementById('bg-url-input')?.focus();
+    }
 
-        /* ---------------- TIME ---------------- */
-        function updateTime() {
-            const now = new Date();
-            const clock = document.getElementById('clock');
-            const day = document.getElementById('day-of-week');
-            const greet = document.getElementById('greeting');
+    function closeBgSettings() {
+      const modal = document.getElementById('bg-modal');
+      if (!modal) return;
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    }
 
-            if (clock) clock.textContent = now.toLocaleTimeString([], {
-                hour12: false
-            });
-            if (day) day.textContent = now.toLocaleDateString([], {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric'
-            });
-            if (greet) {
-                const hrs = now.getHours();
-                greet.textContent = hrs < 12 ? "GOOD MORNING" : hrs < 17 ? "GOOD AFTERNOON" : "GOOD EVENING";
-            }
-        }
+    function saveBackground() {
+      const input = document.getElementById('bg-url-input');
+      if (!input) return;
+      const url = input.value.trim();
+      if (url) {
+        document.body.style.backgroundImage = `url('${url}')`;
+        savePref('bg', url);
+        closeBgSettings();
+      }
+    }
 
-        /* ---------------- FUN FACT & WEATHER ---------------- */
-        async function fetchFunFact() {
-            const out = document.getElementById('fun-fact');
-            try {
-                const res = await fetch('https://uselessfacts.jsph.pl/api/v2/facts/today');
-                if (!res.ok) throw new Error('bad response');
-                const data = await res.json();
-                if (out) out.textContent = "💡 " + (data.text || 'Fact unavailable');
-            } catch {
-                if (out) out.textContent = "💡 Fact unavailable";
-            }
-        }
+    function resetBackground() {
+      document.body.style.backgroundImage = '';
+      savePref('bg', null);
+      closeBgSettings();
+    }
 
-        async function fetchWeather() {
-            const out = document.getElementById('weather');
-            try {
-                const pRes = await fetch(`https://api.weather.gov/points/${ALTON_COORD.lat},${ALTON_COORD.lon}`);
-                if (!pRes.ok) throw new Error('points fetch failed');
-                const pdata = await pRes.json();
-                const forecastUrl = pdata?.properties?.forecast;
-                if (!forecastUrl) throw new Error('no forecast URL');
+    /* ----------------- Time & greeting ----------------- */
+    function updateTime() {
+      const now = new Date();
+      const clock = document.getElementById('clock');
+      const day = document.getElementById('day-of-week');
+      const greet = document.getElementById('greeting');
 
-                const fRes = await fetch(forecastUrl);
-                if (!fRes.ok) throw new Error('forecast fetch failed');
-                const fData = await fRes.json();
-                const cur = fData?.properties?.periods?.[0];
-                if (!cur) throw new Error('no period data');
+      if (clock) clock.textContent = now.toLocaleTimeString([], { hour12: false });
+      if (day) day.textContent = now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+      if (greet) {
+        const hrs = now.getHours();
+        greet.textContent = hrs < 12 ? "GOOD MORNING" : hrs < 17 ? "GOOD AFTERNOON" : "GOOD EVENING";
+      }
+    }
 
-                if (out) out.innerHTML = `Alton, NH: <b>${cur.temperature}°${cur.temperatureUnit}</b> — ${cur.shortForecast}`;
-            } catch (err) {
-                console.warn('Weather fetch error:', err);
-                if (out) out.textContent = 'Weather unavailable';
-            }
-        }
+    /* ----------------- Fun fact & weather ----------------- */
+    async function fetchFunFact() {
+      const out = document.getElementById('fun-fact');
+      try {
+        const res = await fetch('https://uselessfacts.jsph.pl/api/v2/facts/today');
+        if (!res.ok) throw new Error('bad response');
+        const data = await res.json();
+        if (out) out.textContent = "💡 " + (data.text || 'Fact unavailable');
+      } catch {
+        if (out) out.textContent = "💡 Fact unavailable";
+      }
+    }
 
-        /* ---------------- BOOKMARKS & HELPERS ---------------- */
-        function getFavicon(url) {
-            try {
-                return `https://www.google.com/s2/favicons?sz=64&domain=${new URL(url).hostname}`;
-            } catch {
-                return '';
-            }
-        }
+    async function fetchWeather() {
+      const out = document.getElementById('weather');
+      try {
+        const pRes = await fetch(`https://api.weather.gov/points/${ALTON_COORD.lat},${ALTON_COORD.lon}`);
+        if (!pRes.ok) throw new Error('points fetch failed');
+        const pdata = await pRes.json();
+        const forecastUrl = pdata?.properties?.forecast;
+        if (!forecastUrl) throw new Error('no forecast URL');
 
-        /* Default bookmarks list — used when localStorage is empty or corrupted */
-        function defaultBookmarks() {
-            return [{
-                    name: "YouTube",
-                    url: "https://youtube.com"
-                },
-                {
-                    name: "CrazyGames",
-                    url: "https://www.crazygames.com/"
-                },
-                {
-                    name: "TikTok",
-                    url: "https://www.tiktok.com/"
-                },
-                {
-                    name: "Instagram",
-                    url: "https://www.instagram.com/"
-                },
-                {
-                    name: "Discord",
-                    url: "https://discord.com/app"
-                },
-                {
-                    name: "Coolmath Games",
-                    url: "https://www.coolmathgames.com/"
-                },
-                {
-                    name: "Poki",
-                    url: "https://poki.com/"
-                },
-                {
-                    name: "Neal.fun",
-                    url: "https://neal.fun/"
-                },
-                {
-                    name: "Snapchat",
-                    url: "https://www.snapchat.com/"
-                },
-                {
-                    name: "GitHub",
-                    url: "https://github.com/"
-                }
-            ];
-        }
+        const fRes = await fetch(forecastUrl);
+        if (!fRes.ok) throw new Error('forecast fetch failed');
+        const fData = await fRes.json();
+        const cur = fData?.properties?.periods?.[0];
+        if (!cur) throw new Error('no period data');
 
-        function loadBookmarks() {
-            const container = document.getElementById('quick-links');
-            if (!container) return;
+        if (out) out.innerHTML = `Alton, NH: <b>${cur.temperature}°${cur.temperatureUnit}</b> — ${cur.shortForecast}`;
+      } catch (err) {
+        if (out) out.textContent = 'Weather unavailable';
+      }
+    }
 
-            let bms;
-            try {
-                bms = JSON.parse(localStorage.getItem(STORAGE_KEY));
-            } catch {
-                bms = null;
-            }
+    /* ----------------- Bookmarks ----------------- */
+    function getFavicon(url) {
+      try { return `https://www.google.com/s2/favicons?sz=64&domain=${new URL(url).hostname}`; } catch { return ''; }
+    }
 
-            if (!Array.isArray(bms) || bms.length === 0) {
-                bms = defaultBookmarks();
-                try {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(bms));
-                } catch {}
-            }
+    function defaultBookmarks() {
+      return [
+        { name: "YouTube", url: "https://youtube.com" },
+        { name: "CrazyGames", url: "https://www.crazygames.com/" },
+        { name: "TikTok", url: "https://www.tiktok.com/" },
+        { name: "Instagram", url: "https://www.instagram.com/" },
+        { name: "Discord", url: "https://discord.com/app" },
+        { name: "Coolmath Games", url: "https://www.coolmathgames.com/" },
+        { name: "Poki", url: "https://poki.com/" },
+        { name: "Neal.fun", url: "https://neal.fun/" },
+        { name: "Snapchat", url: "https://www.snapchat.com/" },
+        { name: "GitHub", url: "https://github.com/" }
+      ];
+    }
 
-            container.innerHTML = '';
+    function loadBookmarks() {
+      const container = document.getElementById('quick-links');
+      if (!container) return;
 
-            bms.forEach((bm, i) => {
-                const wrap = document.createElement('div');
-                wrap.className = 'bookmark-wrapper';
+      let bms = safeJSONParse(localStorage.getItem(STORAGE_KEY), null);
+      if (!Array.isArray(bms) || bms.length === 0) {
+        bms = defaultBookmarks();
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(bms)); } catch {}
+      }
 
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'bookmark-btn';
-                btn.onclick = () => {
-                    if (bm && bm.url) window.location.assign(bm.url);
-                };
+      container.innerHTML = '';
+      bms.forEach((bm, i) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'bookmark-wrapper';
 
-                const img = document.createElement('img');
-                img.src = getFavicon(bm.url) || '';
-                img.className = 'nav-icon';
-                img.alt = bm.name || '';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bookmark-btn';
+        btn.onclick = () => { if (bm && bm.url) window.location.assign(bm.url); };
 
-                btn.appendChild(img);
-                btn.appendChild(document.createTextNode(bm.name || bm.url || 'link'));
+        const img = document.createElement('img');
+        img.src = getFavicon(bm.url) || '';
+        img.className = 'nav-icon';
+        img.alt = bm.name || '';
 
-                const del = document.createElement('span');
-                del.textContent = '×';
-                del.style.cssText = 'margin-left:10px; cursor:pointer; opacity:0.3';
-                del.title = 'Delete bookmark';
-                del.onclick = (e) => {
-                    e.stopPropagation();
-                    deleteBm(i);
-                };
+        btn.appendChild(img);
+        btn.appendChild(document.createTextNode(bm.name || bm.url || 'link'));
 
-                wrap.appendChild(btn);
-                wrap.appendChild(del);
-                container.appendChild(wrap);
-            });
-        }
+        const del = document.createElement('button');
+        del.textContent = '×';
+        del.style.cssText = 'margin-left:8px; cursor:pointer; opacity:0.45; background:none; border:none; color:var(--text-main);';
+        del.title = 'Delete bookmark';
+        del.setAttribute('aria-label', `Delete ${bm.name || 'bookmark'}`);
+        del.onclick = (e) => { e.stopPropagation(); deleteBm(i); };
 
-        function deleteBm(i) {
-            let bms = [];
-            try {
-                bms = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            } catch {
-                bms = [];
-            }
-            if (i < 0 || i >= bms.length) return;
-            bms.splice(i, 1);
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(bms));
-            } catch {}
-            loadBookmarks();
-        }
+        wrap.appendChild(btn);
+        wrap.appendChild(del);
+        container.appendChild(wrap);
+      });
+    }
 
-        function addBookmark() {
-            const nameEl = document.getElementById('bm-name');
-            const urlEl = document.getElementById('bm-url');
-            if (!nameEl || !urlEl) return;
+    function deleteBm(i) {
+      let bms = safeJSONParse(localStorage.getItem(STORAGE_KEY), []);
+      if (i < 0 || i >= bms.length) return;
+      bms.splice(i, 1);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(bms)); } catch {}
+      loadBookmarks();
+    }
 
-            const name = nameEl.value.trim();
-            let url = urlEl.value.trim();
-            if (!name || !url) return;
+    function addBookmark() {
+      const nameEl = document.getElementById('bm-name');
+      const urlEl = document.getElementById('bm-url');
+      if (!nameEl || !urlEl) return;
 
-            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+      const name = nameEl.value.trim();
+      let url = urlEl.value.trim();
+      if (!name || !url) return;
 
-            let bms = [];
-            try {
-                bms = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            } catch {
-                bms = [];
-            }
-            bms.push({
-                name,
-                url
-            });
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(bms));
-            } catch {}
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
 
-            loadBookmarks();
-            // hide form if present (toggleBookmarkForm exists)
-            toggleBookmarkForm();
+      let bms = safeJSONParse(localStorage.getItem(STORAGE_KEY), []);
+      bms.push({ name, url });
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(bms)); } catch {}
 
-            nameEl.value = '';
-            urlEl.value = '';
-        }
+      loadBookmarks();
+      toggleBookmarkForm();
+      nameEl.value = '';
+      urlEl.value = '';
+    }
 
-        function toggleBookmarkForm() {
-            const f = document.getElementById('bookmark-form');
-            if (!f) return;
-            f.style.display = (f.style.display === 'flex') ? 'none' : 'flex';
-        }
+    function toggleBookmarkForm() {
+      const f = document.getElementById('bookmark-form');
+      if (!f) return;
+      if (f.style.display === 'flex') {
+        f.style.display = 'none';
+      } else {
+        f.style.display = 'flex';
+        f.style.alignItems = 'center';
+      }
+    }
 
-        /* ---------------- HISTORY ---------------- */
-        function saveHistory(url) {
-            if (!url) return;
-            let history = [];
-            try {
-                history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-            } catch {
-                history = [];
-            }
-            // dedupe and keep most recent
-            history = [url, ...history.filter(h => h !== url)].slice(0, 8);
-            try {
-                localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-            } catch {}
-        }
+    /* ----------------- History ----------------- */
+    function saveHistory(url) {
+      if (!url) return;
+      let history = safeJSONParse(localStorage.getItem(HISTORY_KEY), []);
+      // dedupe and keep most recent
+      history = [url, ...history.filter(h => h !== url)].slice(0, 8);
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); } catch {}
+    }
 
-        function renderHistory() {
-            const container = document.getElementById('recent-links');
-            if (!container) return;
+    function renderHistory() {
+      const container = document.getElementById('recent-links');
+      if (!container) return;
 
-            let history = [];
-            try {
-                history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-            } catch {
-                history = [];
-            }
+      let history = safeJSONParse(localStorage.getItem(HISTORY_KEY), []);
+      container.innerHTML = history.length ? '' : '<span style="color:rgba(255,255,255,0.45)">No recent activity</span>';
 
-            container.innerHTML = history.length ? '' : '<span style="color:#666">No recent activity</span>';
+      history.forEach(url => {
+        const a = document.createElement('a');
+        a.className = 'history-item';
+        a.href = url;
+        a.target = '_self';
+        a.rel = 'noopener noreferrer';
 
-            history.forEach(url => {
-                const a = document.createElement('a');
-                a.className = 'history-item';
-                a.href = url;
-                a.target = '_self';
+        const img = document.createElement('img');
+        img.src = getFavicon(url) || '';
+        img.className = 'nav-icon';
+        img.alt = '';
 
-                const img = document.createElement('img');
-                img.src = getFavicon(url) || '';
-                img.className = 'nav-icon';
-                img.alt = '';
+        const label = document.createTextNode(" " + (url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 28) + (url.length > 28 ? "..." : "")));
 
-                const label = document.createTextNode(" " + (url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 25) + (url.length > 25 ? "..." : "")));
+        a.appendChild(img);
+        a.appendChild(label);
+        container.appendChild(a);
+      });
+    }
 
-                a.appendChild(img);
-                a.appendChild(label);
-                container.appendChild(a);
-            });
-        }
+    function clearHistory() {
+      try { localStorage.removeItem(HISTORY_KEY); } catch {}
+      renderHistory();
+    }
 
-        function clearHistory() {
-            try {
-                localStorage.removeItem(HISTORY_KEY);
-            } catch {}
-            renderHistory();
-        }
-
-        /* Expose some functions to global scope so inline HTML onclicks work if you use them */
-        window.toggleEngineMenu = toggleEngineMenu;
-        window.setEngine = setEngine;
-        window.redirect = redirect;
-        window.toggleTheme = toggleTheme;
-        window.openBgSettings = openBgSettings;
-        window.saveBackground = saveBackground;
-        window.resetBackground = resetBackground;
-        window.addBookmark = addBookmark;
-        window.toggleBookmarkForm = toggleBookmarkForm;
-        window.clearHistory = clearHistory;
-        window.deleteBm = deleteBm;
-    </script>
-
+    /* expose functions for inline handlers (keeps compatibility) */
+    window.toggleEngineMenu = toggleEngineMenu;
+    window.setEngine = setEngine;
+    window.redirect = redirect;
+    window.toggleTheme = toggleTheme;
+    window.openBgSettings = openBgSettings;
+    window.closeBgSettings = closeBgSettings;
+    window.saveBackground = saveBackground;
+    window.resetBackground = resetBackground;
+    window.addBookmark = addBookmark;
+    window.toggleBookmarkForm = toggleBookmarkForm;
+    window.clearHistory = clearHistory;
+    window.deleteBm = deleteBm;
+  </script>
 </body>
 
 </html>
