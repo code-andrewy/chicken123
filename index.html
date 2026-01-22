@@ -3,285 +3,423 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jumpman64</title>
+  <title>Jumpman64 | Dashboard</title>
   <link rel="icon" href="https://img.icons8.com/emoji/48/chicken-emoji.png" type="image/x-icon">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Varela+Round:wght@400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
     
+    :root {
+      --bg-overlay: radial-gradient(circle at center, rgba(26,26,46,0.85) 0%, rgba(0,0,0,0.95) 100%);
+      --text-main: #e0f7fa;
+      --text-accent: #00ffff;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --input-bg: rgba(255, 255, 255, 0.07);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+    }
+
+    [data-theme="light"] {
+      --bg-overlay: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, rgba(240,240,255,0.9) 100%);
+      --text-main: #1a1a2e;
+      --text-accent: #007bff;
+      --card-bg: rgba(255, 255, 255, 0.4);
+      --card-border: rgba(0, 0, 0, 0.1);
+      --input-bg: rgba(0, 0, 0, 0.05);
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      background-color: black;
-      font-family: 'Varela Round', sans-serif;
-      color: #ADD8E6;
-      overflow-x: hidden;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background 0.3s, color 0.3s;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
     }
+
+    body::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-overlay); z-index: -1;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      width: 100%; max-width: 900px; display: flex; justify-content: flex-end; padding: 20px; gap: 15px;
+    }
+    .icon-btn {
+      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main);
+      width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.2s;
+    }
+    .icon-btn:hover { background: var(--text-accent); color: white; border-color: transparent; }
 
     .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-      padding: 40px 20px;
+      width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center;
+      padding: 20px 20px 60px 20px; text-align: center;
     }
 
+    /* Typography */
+    .greeting { font-size: 18px; color: var(--text-accent); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; opacity: 0.9; }
     .text {
-      font-size: 80px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #ADD8E6;
-      text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      font-size: 60px; font-weight: 700; margin: 5px 0;
+      background: linear-gradient(135deg, var(--text-main), var(--text-accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 10px 30px var(--shadow-color);
     }
+    #clock { font-size: 50px; font-weight: 300; margin-bottom: 5px; }
+    #day-of-week { font-size: 18px; margin-bottom: 20px; opacity: 0.8; }
 
-    #clock { font-size: 50px; color: #00ffff; font-weight: bold; }
-    #day-of-week { font-size: 30px; margin-bottom: 10px; color: #00ffff; }
-
-    #weather {
-      font-size: 18px;
-      margin-bottom: 30px;
-      color: #ADD8E6;
-      border: 1px solid #00ffff;
-      padding: 10px 25px;
-      border-radius: 50px;
-      background: rgba(0, 255, 255, 0.05);
+    /* Info Pills */
+    .info-pill {
+      font-size: 14px; margin-bottom: 10px; padding: 8px 20px;
+      border-radius: 30px; background: var(--card-bg); backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border); max-width: 80%;
     }
+    #fun-fact { font-style: italic; opacity: 0.9; margin-bottom: 30px; }
 
-    /* Input Area */
-    #search-area { position: relative; margin-bottom: 20px; }
+    /* --- SEARCH BAR --- */
+    #search-container { width: 100%; max-width: 600px; position: relative; margin-bottom: 30px; z-index: 50; }
     
+    .search-wrapper {
+      display: flex; align-items: center;
+      background: var(--input-bg); border: 1px solid var(--card-border);
+      border-radius: 40px; padding: 5px; transition: all 0.3s ease; backdrop-filter: blur(5px);
+    }
+    .search-wrapper:focus-within { border-color: var(--text-accent); box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); }
+
+    /* Custom Engine Selector */
+    .engine-dropdown {
+      position: relative;
+      margin-left: 5px;
+    }
+    
+    .selected-engine {
+      display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 50%;
+      cursor: pointer; background: rgba(255,255,255,0.05);
+      transition: 0.2s;
+    }
+    .selected-engine:hover { background: rgba(255,255,255,0.1); }
+    .selected-engine img { width: 20px; height: 20px; border-radius: 3px; }
+
+    .engine-list {
+      display: none; position: absolute; top: 50px; left: 0;
+      background: var(--card-bg); backdrop-filter: blur(15px);
+      border: 1px solid var(--card-border); border-radius: 12px;
+      padding: 5px; width: 140px; box-shadow: 0 5px 15px var(--shadow-color);
+      flex-direction: column; gap: 5px;
+    }
+    .engine-list.active { display: flex; }
+
+    .engine-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; border-radius: 8px; cursor: pointer;
+      font-size: 14px; color: var(--text-main);
+      transition: background 0.2s;
+    }
+    .engine-option:hover { background: rgba(255,255,255,0.1); color: var(--text-accent); }
+    .engine-option img { width: 16px; height: 16px; }
+
+    /* Input */
     input#url {
-      font-size: 24px;
-      width: 500px;
-      height: 60px;
-      background-color: #111;
-      color: #ADD8E6;
-      border: 2px solid #ADD8E6;
-      border-radius: 30px;
-      padding: 0 25px;
-      outline: none;
-      transition: all 0.3s ease;
+      flex: 1; font-size: 18px; height: 50px; background: transparent;
+      color: var(--text-main); border: none; padding: 0 15px; outline: none;
     }
-
-    input#url:focus { width: 600px; border-color: #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
-
-    #suggestions {
-      list-style: none;
-      padding: 0;
-      margin: 10px 0 0 0;
-      background-color: #111;
-      border: 1px solid #00ffff;
-      border-radius: 15px;
-      max-height: 200px;
-      overflow-y: auto;
-      position: absolute;
-      width: 100%;
-      z-index: 99;
-      text-align: left;
-    }
-
-    #suggestions li { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #222; }
-    #suggestions li:hover { background-color: #222; color: #00ffff; }
 
     .redirect-button {
-      font-size: 24px;
-      background: linear-gradient(45deg, #006400, #008000);
-      color: white;
-      border: none;
-      width: 180px;
-      height: 55px;
-      border-radius: 30px;
-      cursor: pointer;
-      margin-bottom: 40px;
-      font-weight: bold;
-      transition: transform 0.2s;
+      background: var(--text-accent); color: #000; border: none;
+      padding: 0 25px; height: 40px; border-radius: 20px;
+      font-weight: 700; cursor: pointer; transition: 0.3s;
     }
-
     .redirect-button:hover { transform: scale(1.05); }
 
-    /* Bookmarks with Icons */
-    .quick-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 20px;
+    /* Suggestions */
+    #suggestions {
+      list-style: none; padding: 0; margin: 10px 0 0 0;
+      background: rgba(0,0,0,0.9); border: 1px solid var(--card-border);
+      border-radius: 15px; position: absolute; width: 100%;
+      overflow: hidden; display: none; text-align: left;
     }
+    #suggestions.active { display: block; }
+    #suggestions li { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #333; color: #fff; }
+    #suggestions li:hover { background: #222; color: var(--text-accent); }
 
-    .bookmark-wrapper {
-      display: flex;
-      align-items: center;
-      background: #111;
-      border: 1px solid #ADD8E6;
-      border-radius: 12px;
-      padding: 5px 12px;
-      transition: border-color 0.3s;
+    /* Cards */
+    .card {
+      background: var(--card-bg); backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border); border-radius: 20px;
+      padding: 25px; width: 100%; margin-bottom: 20px;
+      box-shadow: 0 4px 20px var(--shadow-color); text-align: left;
     }
-
-    .bookmark-wrapper:hover { border-color: #00ffff; }
-
-    .bookmark-btn {
-      display: flex;
-      align-items: center;
-      background: none;
-      border: none;
-      color: #ADD8E6;
-      font-size: 18px;
-      cursor: pointer;
-      gap: 10px;
-      padding: 5px;
-    }
-
-    .nav-icon { width: 20px; height: 20px; border-radius: 4px; }
-
-    .bookmark-delete {
-      background: none;
-      border: none;
-      color: #ff4444;
-      cursor: pointer;
-      font-size: 16px;
-      margin-left: 5px;
-      opacity: 0.6;
-    }
-
-    .bookmark-delete:hover { opacity: 1; }
-
-    /* History & Footer Sections */
-    #recent-visits { margin-top: 50px; width: 100%; max-width: 800px; }
-    #recent-visits h2 { font-size: 24px; color: #00ffff; }
+    .section-title { font-size: 18px; margin-bottom: 20px; color: var(--text-accent); display: flex; justify-content: space-between; align-items: center; }
     
-    .history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      background: #0a0a0a;
-      padding: 15px;
-      border-radius: 15px;
+    /* Bookmark Styling */
+    .quick-links { display: flex; flex-wrap: wrap; gap: 12px; }
+    .bookmark-wrapper {
+      display: flex; align-items: center; background: rgba(255, 255, 255, 0.08);
+      padding: 8px 15px; border-radius: 12px; transition: 0.2s; border: 1px solid transparent;
     }
+    .bookmark-wrapper:hover { border-color: var(--text-accent); background: rgba(255,255,255,0.15); }
+    .bookmark-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 14px; }
+    .nav-icon { width: 16px; height: 16px; border-radius: 3px; }
 
+    /* History Styling */
+    .history-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
     .history-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #888;
-      text-decoration: none;
-      font-size: 14px;
-      padding: 8px;
-      border-radius: 8px;
+      display: flex; align-items: center; gap: 10px; color: var(--text-main); opacity: 0.7;
+      text-decoration: none; font-size: 13px; padding: 10px; background: rgba(0,0,0,0.1);
+      border-radius: 8px; overflow: hidden; white-space: nowrap;
     }
+    .history-item:hover { opacity: 1; background: rgba(255,255,255,0.1); }
 
-    .history-item:hover { background: #1a1a1a; color: #00ffff; }
-
-    .add-bookmark {
-      display: none;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .add-bookmark input {
-      background: #000;
-      border: 1px solid #ADD8E6;
-      color: white;
-      padding: 10px;
-      border-radius: 8px;
-    }
+    /* Forms & Modals */
+    #bookmark-form { display: none; gap: 10px; margin-top: 15px; }
+    #bookmark-form input { background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 10px; border-radius: 8px; flex: 1; outline: none; }
+    #bg-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-content { background: #222; padding: 30px; border-radius: 20px; width: 400px; text-align: center; border: 1px solid var(--text-accent); }
+    .modal-content input { width: 100%; padding: 10px; margin: 15px 0; background: #111; border: 1px solid #444; color: white; border-radius: 5px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="text">Jumpman64</div>
-    <div id="clock"></div>
-    <div id="day-of-week"></div>
-    <div id="weather">Loading Alton, NH Weather...</div>
 
-    <div id="search-area">
-      <input type="text" id="url" placeholder="Search or type URL..." autocomplete="off"/>
+  <div id="bg-modal">
+    <div class="modal-content">
+      <h3 style="color:white; margin:0">Set Wallpaper</h3>
+      <input type="text" id="bg-url-input" placeholder="https://..." />
+      <button class="redirect-button" onclick="saveBackground()">Save</button>
+      <button style="background:none; border:none; color:#aaa; cursor:pointer; margin-top:10px" onclick="document.getElementById('bg-modal').style.display='none'">Cancel</button>
+      <button style="background:none; border:none; color:#ff4444; cursor:pointer; margin-top:10px; display:block; width:100%" onclick="resetBackground()">Reset Default</button>
+    </div>
+  </div>
+
+  <div class="top-bar">
+    <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">◑</button>
+    <button class="icon-btn" onclick="openBgSettings()" title="Change Wallpaper">🖼</button>
+  </div>
+
+  <div class="container">
+    <div class="greeting" id="greeting">WELCOME</div>
+    <div class="text">Jumpman64</div>
+    <div id="clock">00:00:00</div>
+    <div id="day-of-week">...</div>
+
+    <div class="info-pill" id="weather">Loading Weather...</div>
+    <div class="info-pill" id="fun-fact" style="background:rgba(255, 165, 0, 0.1); border-color: rgba(255, 165, 0, 0.3);">Fetching daily fact...</div>
+
+    <div id="search-container">
+      <div class="search-wrapper">
+        <div class="engine-dropdown" id="engine-wrapper">
+          <div class="selected-engine" onclick="toggleEngineMenu()">
+            <img id="current-engine-icon" src="https://www.google.com/favicon.ico" alt="Engine">
+          </div>
+          <div class="engine-list" id="engine-menu">
+            <div class="engine-option" onclick="setEngine('google', 'https://www.google.com/favicon.ico')">
+              <img src="https://www.google.com/favicon.ico"> Google
+            </div>
+            <div class="engine-option" onclick="setEngine('duckduckgo', 'https://duckduckgo.com/favicon.ico')">
+              <img src="https://duckduckgo.com/favicon.ico"> DuckGo
+            </div>
+            <div class="engine-option" onclick="setEngine('bing', 'https://www.bing.com/favicon.ico')">
+              <img src="https://www.bing.com/favicon.ico"> Bing
+            </div>
+          </div>
+        </div>
+        
+        <input type="text" id="url" placeholder="Search web or type URL..." autocomplete="off"/>
+        <button class="redirect-button" onclick="redirect()">Go</button>
+      </div>
       <ul id="suggestions"></ul>
     </div>
 
-    <button class="redirect-button" onclick="redirect()">Launch</button>
-
-    <div class="quick-links" id="quick-links"></div>
-    
-    <button class="add-bookmark-toggle" onclick="toggleBookmarkForm()" style="background:none; border: 1px solid #ADD8E6; color:#ADD8E6; border-radius:50%; width:40px; height:40px; cursor:pointer;">+</button>
-
-    <div class="add-bookmark" id="bookmark-form">
-      <input type="text" id="bm-name" placeholder="Name" />
-      <input type="text" id="bm-url" placeholder="URL (example.com)" />
-      <button onclick="addBookmark()" style="background:green; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Add</button>
+    <div class="card">
+      <div class="section-title">
+        <span>Bookmarks</span>
+        <button onclick="toggleBookmarkForm()" style="background:none; border:1px solid var(--text-accent); color:var(--text-accent); border-radius:50%; width:28px; height:28px; cursor:pointer;">+</button>
+      </div>
+      <div class="quick-links" id="quick-links"></div>
+      <div id="bookmark-form">
+        <input type="text" id="bm-name" placeholder="Name" />
+        <input type="text" id="bm-url" placeholder="URL" />
+        <button onclick="addBookmark()" style="background:var(--text-accent); border:none; padding:0 20px; border-radius:8px; cursor:pointer; font-weight:bold;">Add</button>
+      </div>
     </div>
 
-    <div id="recent-visits">
-      <h2>History</h2>
+    <div class="card">
+      <div class="section-title">
+        <span>History</span>
+        <button onclick="clearHistory()" style="background:none; border:none; color:#ff4444; cursor:pointer; font-size:12px;">Clear All</button>
+      </div>
       <div id="recent-links" class="history-list"></div>
-      <button onclick="clearHistory()" style="margin-top: 15px; background: none; border: 1px solid #ff4444; color: #ff4444; padding: 5px 15px; border-radius: 5px; cursor: pointer;">Clear History</button>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = 'chickenpass_bookmarks_v2';
-    const HISTORY_KEY = 'chickenpass_history';
-    
-    // Config
+    const STORAGE_KEY = 'jumpman_bms_v4';
+    const HISTORY_KEY = 'jumpman_hist_v4';
+    const PREF_KEY = 'jumpman_pref_v4';
     const ALTON_COORD = { lat: 43.4523, lon: -71.2176 };
 
-    // Elements
-    const inputField = document.getElementById('url');
-    const suggestionsList = document.getElementById('suggestions');
+    // Default Engine State
+    let currentEngine = 'google';
 
-    // --- Core Functions ---
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPreferences();
+      updateTime();
+      setInterval(updateTime, 1000);
+      fetchWeather();
+      fetchFunFact();
+      loadBookmarks();
+      renderHistory();
+      
+      // Close dropdowns if clicking outside
+      document.addEventListener('click', (e) => {
+        if (!document.getElementById('engine-wrapper').contains(e.target)) {
+          document.getElementById('engine-menu').classList.remove('active');
+        }
+        if (!document.getElementById('search-container').contains(e.target)) {
+          document.getElementById('suggestions').classList.remove('active');
+        }
+      });
+    });
 
-    function getFavicon(url) {
-      try {
-        const domain = new URL(url).hostname;
-        return `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
-      } catch {
-        return 'https://img.icons8.com/emoji/48/chicken-emoji.png';
-      }
+    // --- Engine Logic ---
+    function toggleEngineMenu() {
+      document.getElementById('engine-menu').classList.toggle('active');
     }
 
-    function navigate(url) {
-      saveHistory(url);
-      window.location.href = url;
+    function setEngine(name, iconUrl) {
+      currentEngine = name;
+      document.getElementById('current-engine-icon').src = iconUrl;
+      document.getElementById('engine-menu').classList.remove('active');
+      document.getElementById('url').focus();
     }
 
     function redirect() {
-      const input = inputField.value.trim();
+      const input = document.getElementById('url').value.trim();
       if (!input) return;
       
-      let targetUrl;
+      let target;
       if (/^(https?:\/\/)?([\w\d-]+\.)+[\w]{2,}(\/.*)?$/.test(input)) {
-        targetUrl = input.startsWith('http') ? input : 'https://' + input;
+        target = input.startsWith('http') ? input : 'https://' + input;
       } else {
-        targetUrl = 'https://www.google.com/search?q=' + encodeURIComponent(input);
+        const engines = {
+          google: 'https://www.google.com/search?q=',
+          duckduckgo: 'https://duckduckgo.com/?q=',
+          bing: 'https://www.bing.com/search?q='
+        };
+        target = engines[currentEngine] + encodeURIComponent(input);
       }
-      navigate(targetUrl);
+      saveHistory(target);
+      window.location.href = target;
     }
 
-    // --- Weather ---
+    // --- Search Suggestions ---
+    document.getElementById('url').addEventListener('input', async (e) => {
+      const q = e.target.value.trim();
+      const list = document.getElementById('suggestions');
+      if (!q) { list.classList.remove('active'); return; }
+      
+      try {
+        const res = await fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&search=${encodeURIComponent(q)}&limit=5&format=json`);
+        const data = await res.json();
+        list.innerHTML = '';
+        if(data[1].length > 0) {
+          list.classList.add('active');
+          data[1].forEach(title => {
+            const li = document.createElement('li');
+            li.textContent = title;
+            li.onclick = () => {
+               document.getElementById('url').value = title;
+               redirect();
+            };
+            list.appendChild(li);
+          });
+        } else { list.classList.remove('active'); }
+      } catch {}
+    });
+
+    document.getElementById('url').addEventListener('keypress', (e) => { if (e.key === 'Enter') redirect(); });
+
+    // --- Theme & Weather & Facts (Same as before) ---
+    function loadPreferences() {
+      const prefs = JSON.parse(localStorage.getItem(PREF_KEY)) || { theme: 'dark', bg: null };
+      document.body.setAttribute('data-theme', prefs.theme);
+      if (prefs.bg) document.body.style.backgroundImage = `url('${prefs.bg}')`;
+    }
+
+    function toggleTheme() {
+      const current = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      document.body.setAttribute('data-theme', current);
+      savePref('theme', current);
+    }
+
+    function savePref(key, val) {
+      const prefs = JSON.parse(localStorage.getItem(PREF_KEY)) || {};
+      prefs[key] = val;
+      localStorage.setItem(PREF_KEY, JSON.stringify(prefs));
+    }
+
+    // Backgrounds
+    function openBgSettings() { document.getElementById('bg-modal').style.display = 'flex'; }
+    function saveBackground() {
+      const url = document.getElementById('bg-url-input').value.trim();
+      if (url) {
+        document.body.style.backgroundImage = `url('${url}')`;
+        savePref('bg', url);
+        document.getElementById('bg-modal').style.display = 'none';
+      }
+    }
+    function resetBackground() {
+      document.body.style.backgroundImage = '';
+      savePref('bg', null);
+      document.getElementById('bg-modal').style.display = 'none';
+    }
+
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour12:false});
+      document.getElementById('day-of-week').textContent = now.toLocaleDateString([], {weekday:'long', month:'long', day:'numeric'});
+      const hrs = now.getHours();
+      let greet = hrs < 12 ? "GOOD MORNING" : hrs < 17 ? "GOOD AFTERNOON" : "GOOD EVENING";
+      document.getElementById('greeting').textContent = greet;
+    }
+
+    async function fetchFunFact() {
+      try {
+        const res = await fetch('https://uselessfacts.jsph.pl/api/v2/facts/today');
+        const data = await res.json();
+        document.getElementById('fun-fact').textContent = "💡 " + data.text;
+      } catch { document.getElementById('fun-fact').textContent = "💡 Fact unavailable"; }
+    }
+
     async function fetchWeather() {
       try {
         const pRes = await fetch(`https://api.weather.gov/points/${ALTON_COORD.lat},${ALTON_COORD.lon}`);
-        const pData = await pRes.json();
-        const fRes = await fetch(pData.properties.forecast);
+        const data = await pRes.json();
+        const fRes = await fetch(data.properties.forecast);
         const fData = await fRes.json();
-        const current = fData.properties.periods[0];
-        document.getElementById('weather').innerHTML = `Alton, NH: <b>${current.temperature}°${current.temperatureUnit}</b> — ${current.shortForecast}`;
-      } catch {
-        document.getElementById('weather').textContent = 'Weather update failed.';
-      }
+        const cur = fData.properties.periods[0];
+        document.getElementById('weather').innerHTML = `Alton, NH: <b>${cur.temperature}°${cur.temperatureUnit}</b> — ${cur.shortForecast}`;
+      } catch {}
     }
 
-    // --- Bookmarks ---
+    // --- Bookmarks & History ---
+    function getFavicon(url) {
+      try { return `https://www.google.com/s2/favicons?sz=64&domain=${new URL(url).hostname}`; }
+      catch { return 'https://img.icons8.com/emoji/48/chicken-emoji.png'; }
+    }
+
     function loadBookmarks() {
       const container = document.getElementById('quick-links');
-      let bms = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-        { name: "Poki", url: "https://poki.com", protected: true },
-        { name: "Cool Math", url: "https://coolmathgames.com", protected: true }
-      ];
-      
+      let bms = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{ name: "YouTube", url: "https://youtube.com" }];
       container.innerHTML = '';
       bms.forEach((bm, i) => {
         const wrap = document.createElement('div');
@@ -289,37 +427,45 @@
         
         const btn = document.createElement('button');
         btn.className = 'bookmark-btn';
-        btn.onclick = () => navigate(bm.url);
-        btn.innerHTML = `<img src="${getFavicon(bm.url)}" class="nav-icon"> <span>${bm.name}</span>`;
+        btn.onclick = () => window.location.href = bm.url;
         
-        wrap.appendChild(btn);
+        const img = document.createElement('img');
+        img.src = getFavicon(bm.url);
+        img.className = 'nav-icon';
+        
+        btn.appendChild(img);
+        btn.appendChild(document.createTextNode(bm.name));
+        
+        const del = document.createElement('span');
+        del.textContent = '×';
+        del.style.cssText = 'margin-left:10px; cursor:pointer; opacity:0.3';
+        del.onclick = (e) => { e.stopPropagation(); deleteBm(i); };
 
-        if (!bm.protected) {
-          const del = document.createElement('button');
-          del.className = 'bookmark-delete';
-          del.textContent = '✕';
-          del.onclick = () => {
-            bms.splice(i, 1);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(bms));
-            loadBookmarks();
-          };
-          wrap.appendChild(del);
-        }
+        wrap.appendChild(btn);
+        wrap.appendChild(del);
         container.appendChild(wrap);
       });
     }
 
+    function deleteBm(i) {
+      let bms = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      bms.splice(i, 1);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(bms));
+      loadBookmarks();
+    }
+
     function addBookmark() {
-      const name = document.getElementById('bm-name').value;
-      let url = document.getElementById('bm-url').value;
+      const name = document.getElementById('bm-name').value.trim();
+      let url = document.getElementById('bm-url').value.trim();
       if (!name || !url) return;
       if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-
       let bms = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
       bms.push({ name, url });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(bms));
       loadBookmarks();
       toggleBookmarkForm();
+      document.getElementById('bm-name').value = '';
+      document.getElementById('bm-url').value = '';
     }
 
     function toggleBookmarkForm() {
@@ -327,67 +473,30 @@
       f.style.display = (f.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    // --- History ---
     function saveHistory(url) {
       let history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-      history = [url, ...history.filter(i => i !== url)].slice(0, 10);
+      history = [url, ...history.filter(i => i !== url)].slice(0, 8);
       localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
     }
 
     function renderHistory() {
       const container = document.getElementById('recent-links');
       const history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-      container.innerHTML = history.length ? '' : 'No recent history.';
-      
+      container.innerHTML = history.length ? '' : '<span style="color:#666">No recent activity</span>';
       history.forEach(url => {
         const a = document.createElement('a');
         a.className = 'history-item';
-        a.href = "#";
-        a.onclick = (e) => { e.preventDefault(); navigate(url); };
-        a.innerHTML = `<img src="${getFavicon(url)}" class="nav-icon" style="width:14px; height:14px;"> ${url.replace(/^https?:\/\//, '').substring(0, 50)}`;
+        a.href = url;
+        const img = document.createElement('img');
+        img.src = getFavicon(url);
+        img.className = 'nav-icon';
+        a.appendChild(img);
+        a.appendChild(document.createTextNode(" " + url.replace(/^https?:\/\/(www\.)?/, '').substring(0, 25) + "..."));
         container.appendChild(a);
       });
     }
-
-    function clearHistory() {
-      localStorage.removeItem(HISTORY_KEY);
-      renderHistory();
-    }
-
-    // --- Utilities ---
-    function updateTime() {
-      const now = new Date();
-      document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour12:false});
-      document.getElementById('day-of-week').textContent = now.toLocaleDateString([], {weekday:'long'});
-    }
-
-    // Suggestions
-    inputField.addEventListener('input', async () => {
-      const q = inputField.value.trim();
-      if (!q) { suggestionsList.innerHTML = ''; return; }
-      try {
-        const res = await fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&search=${encodeURIComponent(q)}&limit=5&format=json`);
-        const data = await res.json();
-        suggestionsList.innerHTML = '';
-        data[1].forEach(title => {
-          const li = document.createElement('li');
-          li.textContent = title;
-          li.onclick = () => navigate(`https://www.google.com/search?q=${encodeURIComponent(title)}`);
-          suggestionsList.appendChild(li);
-        });
-      } catch {}
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-      updateTime();
-      setInterval(updateTime, 1000);
-      fetchWeather();
-      loadBookmarks();
-      renderHistory();
-    });
-
-    // Enter Key Fix
-    inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') redirect(); });
+    
+    function clearHistory() { localStorage.removeItem(HISTORY_KEY); renderHistory(); }
   </script>
 </body>
 </html>
