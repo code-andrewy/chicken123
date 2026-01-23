@@ -111,13 +111,17 @@
 
     <script>
         let buffer = "";
-        const secret = "jumpman64";
+        // Updated secret key
+        const secret = "onenoteisthegoat";
         // Replace this with your actual GitHub Raw link
         const githubUrl = "https://raw.githubusercontent.com/code-andrewy/jumpman/refs/heads/main/jumpman64.html";
 
         document.addEventListener('keydown', (e) => {
+            // Only capture single character keys (letters/numbers)
             if (e.key.length === 1) {
                 buffer += e.key.toLowerCase();
+                
+                // Keep the buffer the same length as the secret for comparison
                 buffer = buffer.slice(-secret.length);
 
                 if (buffer === secret) {
