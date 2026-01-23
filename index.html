@@ -95,9 +95,7 @@
             border: 1px solid var(--card-border);
             color: var(--text-main);
             width: 50px;
-            /* increased from 44px */
             height: 50px;
-            /* increased from 44px */
             min-width: 50px;
             border-radius: 999px;
             cursor: pointer;
@@ -105,7 +103,6 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            /* bigger icon */
             transition: transform .15s ease, background .15s ease;
             text-decoration: none;
         }
@@ -115,11 +112,6 @@
             background: var(--text-accent);
             color: #000;
             border-color: transparent;
-        }
-
-        /* small readable pill/button style for anchors when there's more content (fallback) */
-        .icon-btn .fa-lg {
-            font-size: 20px;
         }
 
         .page {
@@ -201,6 +193,75 @@
             opacity: 0.95;
         }
 
+        /* Combined pill styles */
+        .combined-pill {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 980px;
+            padding: 12px 18px;
+            border-radius: 18px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(0, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 28px var(--shadow-color);
+            text-align: left;
+        }
+
+        .combined-left {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 120px;
+        }
+
+        .combined-left .greeting {
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-accent);
+            margin: 0;
+        }
+
+        .combined-left .small-sub {
+            font-size: 12px;
+            opacity: 0.85;
+            margin: 0;
+        }
+
+        .combined-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .title-pill {
+            padding: 8px 18px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.06), rgba(0, 123, 255, 0.04));
+            border: 1px solid rgba(0, 255, 255, 0.08);
+            font-weight: 800;
+            font-size: clamp(18px, 4vw, 32px);
+            color: var(--text-main);
+        }
+
+        .combined-right {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 180px;
+            align-items: flex-end;
+        }
+
+        .weather-mini {
+            font-size: 13px;
+            font-weight: 700;
+            opacity: 0.95;
+            display: block;
+        }
+
         /* --- Search Bar --- */
         #search-container {
             width: 100%;
@@ -213,12 +274,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            /* increased gap */
             background: var(--input-bg);
             border: 1px solid var(--card-border);
             border-radius: 999px;
             padding: 10px;
-            /* increased */
             transition: box-shadow .2s ease, border-color .2s ease;
             backdrop-filter: blur(6px);
         }
@@ -228,31 +287,16 @@
             box-shadow: 0 6px 30px rgba(0, 0, 0, 0.25);
         }
 
-        .engine-dropdown {
-            position: relative;
-            margin-left: 6px;
-        }
-
         .selected-engine {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             width: 50px;
-            /* bigger */
             height: 50px;
-            /* bigger */
             border-radius: 50%;
             cursor: pointer;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--card-border);
-        }
-
-        .selected-engine img {
-            width: 24px;
-            /* bigger */
-            height: 24px;
-            border-radius: 3px;
-            display: block;
         }
 
         .engine-list {
@@ -283,27 +327,18 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            /* increased */
             color: var(--text-main);
             transition: background .12s ease;
-        }
-
-        .engine-option:hover {
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-accent);
         }
 
         input#url {
             flex: 1;
             font-size: 20px;
-            /* bigger */
             height: 52px;
-            /* bigger */
             background: transparent;
             color: var(--text-main);
             border: none;
             padding: 0 18px;
-            /* bigger */
             outline: none;
             min-width: 0;
         }
@@ -313,16 +348,13 @@
             color: #000;
             border: none;
             padding: 12px 22px;
-            /* bigger */
             height: 52px;
-            /* bigger */
             border-radius: 999px;
             font-weight: 700;
             cursor: pointer;
             transition: transform .12s ease;
             white-space: nowrap;
             font-size: 16px;
-            /* bigger */
         }
 
         #suggestions {
@@ -378,10 +410,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            /* increased */
             background: rgba(255, 255, 255, 0.04);
             padding: 12px 16px;
-            /* bigger */
             border-radius: 12px;
             transition: transform .12s ease, border-color .12s ease;
             border: 1px solid transparent;
@@ -397,22 +427,18 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            /* bigger gap */
             background: none;
             border: none;
             color: var(--text-main);
             cursor: pointer;
             font-family: inherit;
             font-size: 16px;
-            /* bigger */
             padding: 0;
         }
 
         .nav-icon {
             width: 22px;
-            /* bigger */
             height: 22px;
-            /* bigger */
             border-radius: 3px;
             flex-shrink: 0;
         }
@@ -421,7 +447,6 @@
         .history-list {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            /* bigger */
             gap: 12px;
         }
 
@@ -429,14 +454,11 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            /* bigger */
             color: var(--text-main);
             opacity: 0.85;
             text-decoration: none;
             font-size: 15px;
-            /* bigger */
             padding: 10px;
-            /* bigger */
             background: rgba(0, 0, 0, 0.08);
             border-radius: 8px;
             overflow: hidden;
@@ -461,13 +483,11 @@
             border: 1px solid var(--card-border);
             color: var(--text-main);
             padding: 10px 12px;
-            /* bigger */
             border-radius: 8px;
             flex: 1;
             min-width: 0;
             outline: none;
             font-size: 16px;
-            /* bigger */
         }
 
         #bg-modal,
@@ -512,50 +532,6 @@
             overflow: auto;
             font-size: 13px;
             color: var(--text-main);
-        }
-
-        /* New pill styles for brand and datetime */
-        .brand-pills {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .brand-pill {
-            padding: 8px 16px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--text-main);
-            backdrop-filter: blur(6px);
-        }
-
-        .title-pill {
-            padding: 12px 22px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, rgba(0, 255, 255, 0.06), rgba(0, 123, 255, 0.04));
-            border: 1px solid rgba(0, 255, 255, 0.08);
-            font-weight: 800;
-            font-size: clamp(20px, 5vw, 40px);
-            color: var(--text-main);
-        }
-
-        .datetime-pill {
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            align-items: center;
-            min-width: 180px;
         }
 
         @media (max-width:640px) {
@@ -621,6 +597,17 @@
                 font-size: 13px;
                 padding: 8px;
             }
+
+            .combined-pill {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .combined-right {
+                align-items: center;
+                min-width: auto;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -636,7 +623,7 @@
 <body>
 
     <div class="top-bar" role="toolbar" aria-label="Top controls">
-        <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">🔆󠀊⚫️</button>
+        <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">🔆⚫️</button>
         <button class="icon-btn" onclick="openBgSettings()" title="Change Wallpaper" aria-label="Change Wallpaper">🖼️</button>
 
         <!-- New: Bug Report and Requests buttons -->
@@ -651,23 +638,25 @@
 
     <main class="page" id="page" role="main">
         <div class="brand-row" aria-hidden="false">
-            <div class="greeting" id="greeting">WELCOME</div>
+            <!-- Single combined pill containing greeting, title, time/date, and weather -->
+            <div class="combined-pill" id="combined-pill" role="region" aria-label="Status">
+                <div class="combined-left" aria-hidden="false">
+                    <div class="greeting" id="greeting">WELCOME</div>
+                </div>
 
-            <!-- New: two pill representations of the app name (small badge + larger pill) -->
-            <div class="brand-pills" aria-hidden="false">
-                <div class="title-pill" aria-hidden="false" id="title-pill">Jumpman64 Web view.</div>
-            </div>
+                <div class="combined-center" aria-hidden="false">
+                    <div class="title-pill" id="title-pill">Jumpman64 Web view.</div>
+                </div>
 
-            <!-- Date/time pill -->
-            <div id="datetime-pill" class="datetime-pill" role="status" aria-live="polite">
-                <div id="clock">00:00:00</div>
-                <div id="day-of-week">...</div>
+                <div class="combined-right" aria-hidden="false">
+                    <div id="clock">00:00:00</div>
+                    <div id="day-of-week">...</div>
+                    <div id="weather" class="weather-mini">Loading Weather...</div>
+                </div>
             </div>
         </div>
 
         <div class="pills">
-            <div class="info-pill" id="weather">Loading Weather...</div>
-
             <!-- existing fun fact -->
             <div class="info-pill" id="fun-fact" style="background: rgba(255,165,0,0.06); border-color: rgba(255,165,0,0.18);">Fetching daily fact...</div>
 
@@ -698,6 +687,7 @@
                 </div>
 
                 <input type="text" id="url" placeholder="Search web or type URL..." autocomplete="off" aria-label="Search or URL" />
+                <button class="icon-btn" id="add-bookmark-current" title="Add bookmark from input (Ctrl+D)" aria-label="Add bookmark from input" onclick="openAddBookmarkFromInput()">⭐</button>
                 <button class="redirect-button" onclick="onGoClick()" aria-label="Go">Go</button>
             </div>
 
@@ -707,7 +697,7 @@
         <section class="card" aria-labelledby="bookmarks-title">
             <div class="section-title">
                 <span id="bookmarks-title">Bookmarks</span>
-                <button onclick="toggleBookmarkForm()" aria-expanded="false" style="background:none; border:1px solid var(--text-accent); color:var(--text-accent); border-radius:50%; width:28px; height:28px; cursor:pointer;">+</button>
+                <button id="bookmark-toggle-btn" onclick="toggleBookmarkForm()" aria-expanded="false" style="background:none; border:1px solid var(--text-accent); color:var(--text-accent); border-radius:50%; width:28px; height:28px; cursor:pointer;">+</button>
             </div>
 
             <div class="quick-links" id="quick-links" aria-live="polite"></div>
@@ -719,7 +709,7 @@
             </div>
         </section>
 
-        <section class="card" aria-labelledby="history-title">
+        <section class="card" aria-labelledby="history-title" id="history-section">
             <div class="section-title">
                 <span id="history-title">History</span>
                 <button onclick="clearHistory()" style="background:none; border:none; color:#ff6b6b; cursor:pointer; font-size:13px;">Clear All</button>
@@ -757,8 +747,8 @@
     </div>
 
     <script>
-        /* changes: render app name and date/time in pills; timezone forced to America/New_York for display; keyboard/accessibility improvements.
-           Added: Bug/Requests icons; fetchRandomLine() to read a random non-empty line from verynice.txt
+        /* combined-pill version — keeps previous functionality but shows greeting/title/clock/weather all in one pill.
+           Timezone is forced to America/New_York for display.
         */
 
         const STORAGE_KEY = 'jumpman_bms_v4';
@@ -784,7 +774,9 @@
 
         function keyFromUrl(url) {
             try {
-                return HTML_PREFIX + btoa(encodeURIComponent(url)).replace(/=+$/, '');
+                // make base64 safe for unicode
+                const enc = typeof url === 'string' ? unescape(encodeURIComponent(url)) : String(url);
+                return HTML_PREFIX + btoa(enc).replace(/=+$/, '');
             } catch {
                 return HTML_PREFIX + encodeURIComponent(url).slice(0, 200);
             }
@@ -805,7 +797,7 @@
             setInterval(updateTime, 1000);
             fetchWeather();
             fetchFunFact();
-            fetchRandomLine(); // <-- new call
+            fetchRandomLine();
             loadBookmarks();
             renderHistory();
             bindUIShortcuts();
@@ -864,6 +856,12 @@
                     closeBgSettings();
                     closeHtmlModal();
                 }
+
+                // Ctrl+D -> quick add bookmark from current input
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
+                    e.preventDefault();
+                    openAddBookmarkFromInput();
+                }
             });
         }
 
@@ -876,7 +874,6 @@
                     }
                 });
             });
-            // make the selected-engine keyboard-activatable
             const sel = document.getElementById('selected-engine');
             if (sel) {
                 sel.addEventListener('keydown', (ev) => {
@@ -929,7 +926,7 @@
             }
         }
 
-        /* Main Go handler: detects URL vs search; if URL tries to fetch HTML (best-effort), saves history, then navigates */
+        /* Main Go handler */
         async function onGoClick() {
             const input = document.getElementById('url');
             if (!input) return;
@@ -1087,7 +1084,6 @@
         }
 
         /* Time / weather / fun fact */
-        /* NOTE: explicitly show America/New_York time for display */
         function updateTime() {
             const now = new Date();
             const clock = document.getElementById('clock');
@@ -1119,11 +1115,11 @@
                     greet.textContent = (hrsNum < 12) ? "Good morning☀️" : (hrsNum < 17) ? "Good Afternoon🌤️" : "Good Evening🌇";
                 }
             } catch (err) {
-                // fallback
                 if (clock) clock.textContent = now.toLocaleTimeString();
                 if (day) day.textContent = now.toLocaleDateString();
             }
         }
+
         async function fetchFunFact() {
             const out = document.getElementById('fun-fact');
             try {
@@ -1135,6 +1131,7 @@
                 if (out) out.textContent = "💡 Fact unavailable";
             }
         }
+
         async function fetchWeather() {
             const out = document.getElementById('weather');
             try {
@@ -1155,7 +1152,6 @@
         }
 
         /* Bookmarks & History */
-        /* get favicon helper */
         function getFavicon(url) {
             try {
                 return `https://www.google.com/s2/favicons?sz=64&domain=${new URL(url).hostname}`;
@@ -1165,50 +1161,20 @@
         }
 
         function defaultBookmarks() {
-            return [{
-                    name: "YouTube",
-                    url: "https://youtube.com"
-                },
-                {
-                    name: "CrazyGames",
-                    url: "https://www.crazygames.com/"
-                },
-                {
-                    name: "TikTok",
-                    url: "https://www.tiktok.com/"
-                },
-                {
-                    name: "Instagram",
-                    url: "https://www.instagram.com/"
-                },
-                {
-                    name: "Discord",
-                    url: "https://discord.com/app"
-                },
-                {
-                    name: "Coolmath Games",
-                    url: "https://www.coolmathgames.com/"
-                },
-                {
-                    name: "Poki",
-                    url: "https://poki.com/"
-                },
-                {
-                    name: "Neal.fun",
-                    url: "https://neal.fun/"
-                },
-                {
-                    name: "Snapchat",
-                    url: "https://www.snapchat.com/"
-                },
-                {
-                    name: "GitHub",
-                    url: "https://github.com/"
-                }
+            return [
+                { name: "YouTube", url: "https://youtube.com" },
+                { name: "CrazyGames", url: "https://www.crazygames.com/" },
+                { name: "TikTok", url: "https://www.tiktok.com/" },
+                { name: "Instagram", url: "https://www.instagram.com/" },
+                { name: "Discord", url: "https://discord.com/app" },
+                { name: "Coolmath Games", url: "https://www.coolmathgames.com/" },
+                { name: "Poki", url: "https://poki.com/" },
+                { name: "Neal.fun", url: "https://neal.fun/" },
+                { name: "Snapchat", url: "https://www.snapchat.com/" },
+                { name: "GitHub", url: "https://github.com/" }
             ];
         }
 
-        /* load bookmarks and render; bookmark click now saves history (with existing htmlKey if saved) */
         function loadBookmarks() {
             const container = document.getElementById('quick-links');
             if (!container) return;
@@ -1228,7 +1194,6 @@
                 btn.type = 'button';
                 btn.className = 'bookmark-btn';
 
-                // when clicking bookmark: save to history (with any stored htmlKey) then navigate
                 btn.onclick = (e) => {
                     e.stopPropagation();
                     const url = bm.url;
@@ -1269,7 +1234,6 @@
             });
         }
 
-        /* delete bookmark */
         function deleteBm(i) {
             let bms = safeJSONParse(localStorage.getItem(STORAGE_KEY), []);
             if (i < 0 || i >= bms.length) return;
@@ -1280,7 +1244,6 @@
             loadBookmarks();
         }
 
-        /* add bookmark: still attempts to fetch HTML (best-effort), then saves to history */
         async function addBookmark() {
             const nameEl = document.getElementById('bm-name');
             const urlEl = document.getElementById('bm-url');
@@ -1291,20 +1254,18 @@
             if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
 
             let bms = safeJSONParse(localStorage.getItem(STORAGE_KEY), []);
-            bms.push({
-                name,
-                url
-            });
+            if (!Array.isArray(bms)) bms = [];
+            // add new bookmarks to the front so they're easy to access
+            bms.unshift({ name, url });
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(bms));
             } catch {}
 
             loadBookmarks();
-            toggleBookmarkForm();
+            toggleBookmarkForm(false); // close
             nameEl.value = '';
             urlEl.value = '';
 
-            // best-effort fetch and store HTML after adding (short timeout)
             let htmlKey = null;
             try {
                 const text = await fetchWithProxyFallback(url, 3000).catch(() => null);
@@ -1312,23 +1273,58 @@
             } catch (err) {
                 console.warn('bookmark HTML fetch failed', err);
             }
-            // also save to history
             saveHistory(url, name, htmlKey);
         }
 
-        /* toggle bookmark form */
-        function toggleBookmarkForm() {
+        function toggleBookmarkForm(forceToggle) {
             const f = document.getElementById('bookmark-form');
+            const btn = document.getElementById('bookmark-toggle-btn');
             if (!f) return;
-            if (f.style.display === 'flex') {
+            // if forceToggle === false -> close, === true -> open. otherwise toggle
+            let open;
+            if (forceToggle === true) open = true;
+            else if (forceToggle === false) open = false;
+            else open = f.style.display !== 'flex';
+            if (!open) {
                 f.style.display = 'none';
+                if (btn) btn.setAttribute('aria-expanded', 'false');
             } else {
                 f.style.display = 'flex';
                 f.style.alignItems = 'center';
+                if (btn) btn.setAttribute('aria-expanded', 'true');
+                // focus the name input for quick typing
+                document.getElementById('bm-name')?.focus();
             }
         }
 
-        /* Show stored HTML modal (kept in case you want to re-enable viewing later) */
+        function openAddBookmark(name, url) {
+            const f = document.getElementById('bookmark-form');
+            const nameEl = document.getElementById('bm-name');
+            const urlEl = document.getElementById('bm-url');
+            if (!f || !nameEl || !urlEl) return;
+            if (name) nameEl.value = name;
+            if (url) urlEl.value = url;
+            toggleBookmarkForm(true);
+            // focus url if name is filled, otherwise name
+            if (!nameEl.value) nameEl.focus();
+            else urlEl.focus();
+        }
+
+        function openAddBookmarkFromInput() {
+            const input = document.getElementById('url');
+            if (!input) return;
+            const raw = input.value.trim();
+            if (!raw) {
+                // populate with empty values but open form
+                openAddBookmark('', '');
+                return;
+            }
+            const domainLike = /^(https?:\/\/)?([\w-]+\.)+[\w]{2,}(\/.*)?$/i;
+            const url = domainLike.test(raw) ? (raw.startsWith('http') ? raw : 'https://' + raw) : raw;
+            const name = domainLike.test(raw) ? getHostnameLabel(url) : raw;
+            openAddBookmark(name, url);
+        }
+
         function showStoredHtmlForUrl(url, title) {
             const key = keyFromUrl(url);
             const html = localStorage.getItem(key);
@@ -1370,7 +1366,6 @@
             navigator.clipboard?.writeText(text).then(() => alert('HTML copied to clipboard'), () => alert('Copy failed'));
         }
 
-        /* History saves htmlKey reference if available */
         function saveHistory(url, title, htmlKey = null) {
             if (!url) return;
             const history = safeJSONParse(localStorage.getItem(HISTORY_KEY), []);
@@ -1380,11 +1375,10 @@
                 ts: Date.now(),
                 htmlKey: htmlKey || null
             };
-            const newHistory = [entry, ...history.filter(h => h.url !== url)].slice(0, 50); // keep up to 50
+            const newHistory = [entry, ...history.filter(h => h.url !== url)].slice(0, 50);
             try {
                 localStorage.setItem(HISTORY_KEY, JSON.stringify(newHistory));
             } catch {}
-            // write cookie referencing last saved html key (or last url)
             if (htmlKey) {
                 document.cookie = `jumpman_last_html=${encodeURIComponent(htmlKey)}; path=/; max-age=${60*60*24*365}; SameSite=Lax`;
             } else {
@@ -1395,16 +1389,19 @@
             renderHistory();
         }
 
-        /* Render history (no "View HTML" buttons shown now) */
         function renderHistory() {
             const container = document.getElementById('recent-links');
-            if (!container) return;
+            const section = document.getElementById('history-section');
+            if (!container || !section) return;
             const history = safeJSONParse(localStorage.getItem(HISTORY_KEY), []);
             if (!history || history.length === 0) {
-                container.innerHTML = '<span style="color:rgba(255,255,255,0.45)">No recent activity</span>';
+                // hide the whole history section if there's nothing
+                section.style.display = 'none';
+                container.innerHTML = '';
                 return;
             }
 
+            section.style.display = 'block';
             container.innerHTML = '';
             history.forEach(entry => {
                 const a = document.createElement('a');
@@ -1425,7 +1422,6 @@
 
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
-                    // update history position and navigate
                     saveHistory(entry.url, entry.title, entry.htmlKey || null);
                     window.location.assign(entry.url);
                 });
@@ -1452,7 +1448,6 @@
             try {
                 const data = await fetchWithProxyFallback(url, 4000);
                 if (!data) throw new Error('No data');
-                // split lines, trim, ignore empty lines
                 const lines = data.split('\n').map(l => l.replace(/\r$/, '').trim()).filter(l => l.length > 0);
                 if (!lines.length) {
                     out.textContent = 'No entries found in verynice.txt';
@@ -1477,6 +1472,8 @@
         window.resetBackground = resetBackground;
         window.addBookmark = addBookmark;
         window.toggleBookmarkForm = toggleBookmarkForm;
+        window.openAddBookmark = openAddBookmark;
+        window.openAddBookmarkFromInput = openAddBookmarkFromInput;
         window.clearHistory = clearHistory;
         window.deleteBm = deleteBm;
         window.showStoredHtmlForUrl = showStoredHtmlForUrl;
