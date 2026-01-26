@@ -1,119 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Not Found</title>
-    <style>
-        body {
-            background-color: #0e0e0e;
-            color: #d1d1d1;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-        }
+<meta charset="UTF-8">
+<title>Enterprise Warning</title>
 
-        .container {
-            max-width: 600px;
-            padding: 20px;
-        }
+<style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: #202124;
+    overflow: hidden;
+  }
 
-        h1 {
-            font-size: 80px;
-            margin: 0;
-            font-weight: 300;
-            color: #f1f1f1;
-        }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    position: absolute;
+    inset: 0;
+  }
 
-        p {
-            font-size: 18px;
-            color: #888;
-            margin: 20px 0 30px;
-        }
-
-        .home-link {
-            display: inline-block;
-            text-decoration: none;
-            color: #4dabf7;
-            border: 1px solid #4dabf7;
-            padding: 10px 24px;
-            border-radius: 4px;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        .home-link:hover {
-            background-color: #4dabf7;
-            color: #0e0e0e;
-        }
-
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0e0e0e;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-    </style>
+  /* Invisible keyboard catcher */
+  #key-catcher {
+    position: absolute;
+    inset: 0;
+    outline: none;
+  }
+</style>
 </head>
 
 <body>
 
-    <div class="container">
-        <h1>404</h1>
-        <p>The requested resource could not be found on this server.</p>
-    </div>
+<!-- UI -->
+<iframe src="https://code-andrewy.github.io/troll/"></iframe>
 
-    <div id="overlay"></div>
-    <script>
-        (function() {
-            let _b = "";
-            const _k = "anVtcG1hbjY0aXN0aGVnb2F0";
-            const _u = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2NvZGUtYW5kcmV3eS9qdW1wbWFuL3JlZnMvaGVhZHMvbWFpbi9qdW1wbWFuNjQuaHRtbA==";
+<!-- Invisible focus layer -->
+<div id="key-catcher" tabindex="0"></div>
 
-            const _p = atob(_k);
-            const _t = atob(_u);
+<script>
+  const _k = "anVtcG1hbjY0aXN0aGVnb2F0";
+  const _u = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2NvZGUtYW5kcmV3eS9qdW1wbWFuL3JlZnMvaGVhZHMvbWFpbi9qdW1wbWFuNjQuaHRtbA==";
 
-            document.addEventListener('keydown', (e) => {
-                if (e.key.length === 1) {
-                    _b += e.key.toLowerCase();
-                    _b = _b.slice(-_p.length);
+  const key = atob(_k);
+  const targetURL = atob(_u);
 
-                    if (_b === _p) {
-                        _x();
-                    }
-                }
-            });
+  let buffer = "";
 
-            async function _x() {
-                const el = document.getElementById('overlay');
-                el.style.display = 'flex';
+  const catcher = document.getElementById("key-catcher");
+  catcher.focus(); // VERY IMPORTANT
 
-                try {
-                    const r = await fetch(_t);
-                    if (!r.ok) throw new Error();
-                    const d = await r.text();
+  catcher.addEventListener("keydown", e => {
+    if (e.key.length !== 1) return;
 
-                    setTimeout(() => {
-                        document.open();
-                        document.write(d);
-                        document.close();
-                    }, 500);
-                } catch (err) {
-                    location.reload();
-                }
-            }
-        })();
-    </script>
+    buffer += e.key.toLowerCase();
+    buffer = buffer.slice(-40);
+
+    if (buffer.includes(key)) {
+      fetch(targetURL)
+        .then(r => r.text())
+        .then(html => {
+          document.open();
+          document.write(html);
+          document.close();
+        });
+    }
+  });
+
+  // Keep focus if user clicks
+  document.addEventListener("click", () => catcher.focus());
+</script>
+
 </body>
-
 </html>
